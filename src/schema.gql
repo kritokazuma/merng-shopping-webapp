@@ -1,0 +1,68 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input AddressInput {
+  address: String!
+  region: String!
+  township: String!
+}
+
+type AuthUserReturn {
+  email: String!
+  token: String!
+  username: String!
+}
+
+input ConfirmOtp {
+  email: String!
+  otp: String!
+}
+
+input CreateAuthInput {
+  dateOfBirth: String!
+  email: String!
+  gender: String!
+  name: String!
+  password: String!
+  phone: String!
+  username: String!
+}
+
+input ForgetPasswordInput {
+  email: String!
+}
+
+type JwtDecodeReturnDto {
+  avatar: String!
+  email: String!
+  id: String!
+  username: String!
+}
+
+input LoginAuthInput {
+  password: String!
+  username: String!
+}
+
+type Mutation {
+  addAddress(addressInput: AddressInput!): String!
+  confirmResetPasswordOtp(confirmOtp: ConfirmOtp!): forgetPasswordConfirmOtpReturn!
+  forgetPassword(forgetPasswordInput: ForgetPasswordInput!): String!
+  login(loginAuthInput: LoginAuthInput!): AuthUserReturn!
+  register(createAuthInput: CreateAuthInput!): AuthUserReturn!
+  resetPassword(resetPasswordInput: ResetPasswordInput!): String!
+}
+
+type Query {
+  hello: JwtDecodeReturnDto!
+}
+
+input ResetPasswordInput {
+  confirmPassword: String!
+  password: String!
+}
+
+type forgetPasswordConfirmOtpReturn {
+  token: String!
+}
