@@ -21,7 +21,7 @@ import { JwtChangePasswordStratrgy } from './jwt-change-pass.strategy';
     UserModule,
     JwtModule.register({
       secret: process.env.SECRET,
-      signOptions: { expiresIn: '5m' },
+      signOptions: { expiresIn: '5d' },
     }),
   ],
   providers: [

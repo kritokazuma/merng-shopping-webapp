@@ -13,7 +13,7 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { LoginAuthInput } from './dto/login-auth.input';
 import { AddressInput } from './dto/address-input.dto';
-import { JwtDecodeReturnDto } from './dto/auth-decode.dto';
+import { JwtDecodeReturnDto } from './dto/auth-jwt-decode.dto';
 import { Cache } from 'cache-manager';
 import { ForgetPasswordInput } from './dto/forget-password.input';
 import * as nodemailer from 'nodemailer';
@@ -83,7 +83,9 @@ export class AuthService {
     return 'success';
   }
 
-  async forgetPassword(forgetPasswordInput: ForgetPasswordInput) {
+  async forgetPassword(
+    forgetPasswordInput: ForgetPasswordInput,
+  ): Promise<string> {
     const User = await this.userService.findByEmail(forgetPasswordInput.email);
     if (!User) throw new UserInputError('user not found');
 
@@ -148,7 +150,7 @@ export class AuthService {
           email: confirmOtp.email,
           type: 'reset',
         },
-        { expiresIn: '12h' },
+        { expiresIn: '5m' },
       ),
     };
   }
@@ -157,11 +159,16 @@ export class AuthService {
     inputNewPassword: ResetPasswordInput,
     jwtResetPassword: JwtResetPasswordDto,
   ) {
+    if (jwtResetPassword.type !== 'reset')
+      throw new AuthenticationError('wrong token');
+
     const User = await this.userService.findByEmail(jwtResetPassword.email);
+
     if (!User) throw new UserInputError('user not found');
     if (inputNewPassword.password !== inputNewPassword.confirmPassword) {
       throw new UserInputError('password must be same as confirm password');
     }
+
     const hash = await this.hash(inputNewPassword.password);
     User.password = hash;
     await User.save();
@@ -190,6 +197,7 @@ export class AuthService {
       email: UserDetails.email,
       username: UserDetails.username,
       avatar: UserDetails.avatar,
+      role: UserDetails.role,
     };
   }
 }

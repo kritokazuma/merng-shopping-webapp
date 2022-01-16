@@ -1,16 +1,10 @@
-import { Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { User } from 'src/user/user.schema';
 
 export type ItemDocument = Item & mongoose.Document;
 
-class WarrentyStatus {
-  @Prop()
-  isAvailable: boolean;
-
-  @Prop()
-  sevenDaysReturns: boolean;
-}
+console.log(User.name);
 
 class UserRatings {
   @Prop()
@@ -32,7 +26,6 @@ class Sender {
   comment: string;
 }
 
-//[{q: q, s: s}]
 class Comment {
   @Prop()
   question: Sender;
@@ -41,12 +34,19 @@ class Comment {
   answer: Sender;
 }
 
+@Schema()
 export class Item {
   @Prop()
   label: string;
 
   @Prop()
   description: string;
+
+  @Prop()
+  images: string[];
+
+  @Prop()
+  catagory: string[];
 
   @Prop()
   price: number;
@@ -58,7 +58,7 @@ export class Item {
   isAvailable: boolean;
 
   @Prop()
-  warrenty: WarrentyStatus;
+  warrenty: boolean;
 
   @Prop()
   ratings: UserRatings[];
@@ -66,7 +66,7 @@ export class Item {
   @Prop()
   comments: Comment[];
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'user' })
   seller: User;
 
   @Prop({ type: Date, default: new Date().toISOString() })

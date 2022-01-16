@@ -17,7 +17,7 @@ import { LoginAuthInput } from './dto/login-auth.input';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from './gql-auth.guard';
 import { JwtAuthGuard } from './jwt-auth.guard';
-import { JwtDecodeReturnDto } from './dto/auth-decode.dto';
+import { JwtDecodeReturnDto } from './dto/auth-jwt-decode.dto';
 import { AddressInput } from './dto/address-input.dto';
 import * as otpGenerator from 'otp-generator';
 import { ForgetPasswordInput } from './dto/forget-password.input';
@@ -33,10 +33,10 @@ export class AuthResolver {
   }
 
   //TEST route
-  @Query(() => JwtDecodeReturnDto)
+  @Query(() => String)
   @UseGuards(JwtAuthGuard)
   async hello(@Context() context) {
-    return context.req.user;
+    return 'hello world';
   }
 
   //Register route

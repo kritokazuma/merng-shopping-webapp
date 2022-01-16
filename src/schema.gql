@@ -29,15 +29,18 @@ input CreateAuthInput {
   username: String!
 }
 
-input ForgetPasswordInput {
-  email: String!
+input CreateItemInput {
+  catagory: [String!]!
+  description: String!
+  images: [String!]!
+  label: String!
+  price: Int!
+  quantity: Int!
+  warrenty: Boolean!
 }
 
-type JwtDecodeReturnDto {
-  avatar: String!
+input ForgetPasswordInput {
   email: String!
-  id: String!
-  username: String!
 }
 
 input LoginAuthInput {
@@ -48,6 +51,7 @@ input LoginAuthInput {
 type Mutation {
   addAddress(addressInput: AddressInput!): String!
   confirmResetPasswordOtp(confirmOtp: ConfirmOtp!): forgetPasswordConfirmOtpReturn!
+  createItem(createItemInput: CreateItemInput!): String!
   forgetPassword(forgetPasswordInput: ForgetPasswordInput!): String!
   login(loginAuthInput: LoginAuthInput!): AuthUserReturn!
   register(createAuthInput: CreateAuthInput!): AuthUserReturn!
@@ -55,7 +59,8 @@ type Mutation {
 }
 
 type Query {
-  hello: JwtDecodeReturnDto!
+  getItems: String!
+  hello: String!
 }
 
 input ResetPasswordInput {

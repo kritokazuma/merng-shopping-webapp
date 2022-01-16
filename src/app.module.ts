@@ -18,16 +18,11 @@ import { CommentsModule } from './comments/comments.module';
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
     }),
-    MongooseModule.forRoot(process.env.MONGO_URL + 'users', {
-      connectionName: 'users',
-    }),
-    MongooseModule.forRoot(process.env.MONGO_URL + 'items', {
-      connectionName: 'items',
-    }),
+    MongooseModule.forRoot(process.env.MONGO_URL + 'users'),
     UserModule,
     AuthModule,
-    ItemsModule,
     CommentsModule,
+    ItemsModule,
   ],
   controllers: [],
   providers: [],
