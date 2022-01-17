@@ -6,7 +6,7 @@ import {
   ForbiddenError,
 } from 'apollo-server-express';
 import { Model } from 'mongoose';
-import { User, UserDocument } from 'src/user/user.schema';
+import { User } from 'src/user/user.schema';
 import { UserService } from 'src/user/user.service';
 import { CreateAuthInput } from './dto/create-auth.input';
 import * as bcrypt from 'bcrypt';
@@ -25,7 +25,7 @@ import { JwtResetPasswordDto } from './dto/jwt-reset-password.dto';
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(User.name) private userModel: Model<User>,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     private userService: UserService,
     private jwtService: JwtService,
@@ -62,6 +62,8 @@ export class AuthService {
     if (!comparePassword) {
       throw new UserInputError('wrong username or password');
     }
+
+    
 
     return {
       email: User.email,

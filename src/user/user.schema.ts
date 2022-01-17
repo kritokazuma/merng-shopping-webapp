@@ -1,8 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, model, Schema as MongooseSchema } from 'mongoose';
-import { Item } from 'src/items/items.schema';
-
-export type UserDocument = User & Document;
+import { Document } from 'mongoose';
 
 @Schema()
 class RegionNTownship {
@@ -14,15 +11,6 @@ class RegionNTownship {
 
   @Prop()
   address: string[];
-}
-
-@Schema()
-class OrderItemAndStatus {
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: Item })
-  item: string;
-
-  @Prop({ default: 'ordered' })
-  status: string;
 }
 
 @Schema()
@@ -57,17 +45,8 @@ export class User extends Document {
   @Prop({ default: 'buyer' })
   role: string;
 
-  @Prop()
-  orders: OrderItemAndStatus[];
-
-  @Prop({
-    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Item' }],
-  })
-  items: Item[];
-
   @Prop({ type: Date, default: new Date().toISOString() })
   createdAt: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
-export const UserModel = model('UserModel', UserSchema);

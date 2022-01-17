@@ -1,11 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import * as mongoose from 'mongoose';
+import { Document, Schema as MongooseSchema } from 'mongoose';
 import { User } from 'src/user/user.schema';
 
-export type ItemDocument = Item & mongoose.Document;
-
 console.log(User.name);
-
 class UserRatings {
   @Prop()
   username: string;
@@ -35,7 +32,7 @@ class Comment {
 }
 
 @Schema()
-export class Item {
+export class Item extends Document {
   @Prop()
   label: string;
 
@@ -66,8 +63,8 @@ export class Item {
   @Prop()
   comments: Comment[];
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'user' })
-  seller: User;
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: User.name })
+  seller: MongooseSchema.Types.ObjectId;
 
   @Prop({ type: Date, default: new Date().toISOString() })
   createdAt: string;
