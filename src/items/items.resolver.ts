@@ -3,6 +3,7 @@ import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateItemInput } from './dto/create-item.input';
 import { ItemEntitiesReturn } from './entities/items.entities';
+import { ItemsAuthGuard } from './items.guards';
 import { ItemsService } from './items.service';
 
 @Resolver()
@@ -15,7 +16,7 @@ export class ItemsResolver {
   }
 
   @Mutation(() => String)
-  @UseGuards(JwtAuthGuard) //TODO
+  @UseGuards(JwtAuthGuard, ItemsAuthGuard) //TODO
   @SetMetadata('roles', ['admin', 'seller'])
   createItem(
     @Args('createItemInput') createItemInput: CreateItemInput,
