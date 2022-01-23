@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 import { User } from 'src/user/user.schema';
+import * as mongooseDelete from 'mongoose-delete';
 
 console.log(User.name);
 class UserRatings {
@@ -68,6 +69,9 @@ export class Item extends Document {
 
   @Prop({ type: Date, default: new Date().toISOString() })
   createdAt: string;
+
+  @Prop({ type: Date })
+  updatedAt: string;
 }
 
 export const ItemSchema = SchemaFactory.createForClass(Item);

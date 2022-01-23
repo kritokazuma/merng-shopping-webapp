@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ItemsModule } from './items/items.module';
 import { CommentsModule } from './comments/comments.module';
+import { GraphQLUpload } from 'graphql-upload';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { CommentsModule } from './comments/comments.module';
       },
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
+      resolvers: { Upload: GraphQLUpload },
     }),
     MongooseModule.forRoot(process.env.MONGO_URL + 'users'),
     UserModule,

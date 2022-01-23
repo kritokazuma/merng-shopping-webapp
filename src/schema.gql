@@ -14,6 +14,15 @@ type AuthUserReturn {
   username: String!
 }
 
+input CatagoryInput {
+  catagory: [String!]!
+}
+
+type Comment {
+  answer: Sender
+  question: Sender
+}
+
 input ConfirmOtp {
   email: String!
   otp: String!
@@ -32,7 +41,6 @@ input CreateAuthInput {
 input CreateItemInput {
   catagory: [String!]!
   description: String!
-  images: [String!]!
   label: String!
   price: Int!
   quantity: Int!
@@ -43,6 +51,23 @@ input ForgetPasswordInput {
   email: String!
 }
 
+type ItemEntitiesReturn {
+  _id: String!
+  catagory: [String!]!
+  comments: [Comment!]
+  createdAt: String!
+  description: String!
+  images: [String!]!
+  isAvailable: Boolean!
+  label: String!
+  price: Int!
+  quantity: Int!
+  ratings: [UserRatings!]
+  seller: SellerDetails!
+  updatedAt: String
+  warrenty: Boolean!
+}
+
 input LoginAuthInput {
   password: String!
   username: String!
@@ -51,21 +76,52 @@ input LoginAuthInput {
 type Mutation {
   addAddress(addressInput: AddressInput!): String!
   confirmResetPasswordOtp(confirmOtp: ConfirmOtp!): forgetPasswordConfirmOtpReturn!
-  createItem(createItemInput: CreateItemInput!): String!
+  createItem(createItemInput: CreateItemInput!, file: [Upload!]!): ItemEntitiesReturn!
+  deleteItem(id: String!): String!
   forgetPassword(forgetPasswordInput: ForgetPasswordInput!): String!
+  imageUpload(file: Upload!): String!
   login(loginAuthInput: LoginAuthInput!): AuthUserReturn!
   register(createAuthInput: CreateAuthInput!): AuthUserReturn!
   resetPassword(resetPasswordInput: ResetPasswordInput!): String!
 }
 
 type Query {
-  getItems: String!
+  getItemById(id: String!): ItemEntitiesReturn!
+  getItems: [ItemEntitiesReturn!]!
+  getItemsByCatagory(catagoryInput: CatagoryInput!): [ItemEntitiesReturn!]!
   hello: String!
+}
+
+type RegionAndTownship {
+  address: [String!]!
+  region: String!
+  township: String!
 }
 
 input ResetPasswordInput {
   confirmPassword: String!
   password: String!
+}
+
+type SellerDetails {
+  avatar: String!
+  location: RegionAndTownship!
+  name: String!
+  phone: String!
+}
+
+type Sender {
+  comment: String!
+  sendBy: String!
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+type UserRatings {
+  rating: Int
+  review: String
+  username: String
 }
 
 type forgetPasswordConfirmOtpReturn {

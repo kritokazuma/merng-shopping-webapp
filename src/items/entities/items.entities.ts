@@ -61,13 +61,16 @@ class SellerDetails {
 @ObjectType()
 export class ItemEntitiesReturn {
   @Field(() => String)
+  _id: string;
+
+  @Field(() => String)
   label: string;
 
   @Field(() => String)
   description: string;
 
   @Field(() => [String])
-  image: string[];
+  images: string[];
 
   @Field(() => [String])
   catagory: string[];
@@ -91,8 +94,11 @@ export class ItemEntitiesReturn {
   comments: Comment[];
 
   @Field(() => SellerDetails)
-  seller: SellerDetails;
+  seller: [SellerDetails];
 
   @Field(() => String)
   createdAt: string;
+
+  @Field(() => String, { nullable: true })
+  updatedAt?: string;
 }

@@ -9,9 +9,6 @@ export class CreateItemInput {
   description: string;
 
   @Field(() => [String])
-  images: string[];
-
-  @Field(() => [String])
   catagory: string[];
 
   @Field(() => Int)
