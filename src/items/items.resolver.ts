@@ -4,13 +4,11 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CatagoryInput } from './dto/catagory.input';
 import { CreateItemInput } from './dto/create-item.input';
 import { ItemEntitiesReturn } from './entities/items.entities';
-import { ItemsAuthGuard } from './items.guards';
+import { SellerRoleGuard } from './seller.guards';
 import { ItemsService } from './items.service';
 import { Roles } from './roles.decorator';
 import { GraphQLUpload, FileUpload } from 'graphql-upload';
-import { createWriteStream } from 'fs';
-import { finished } from 'stream';
-import { dirname } from 'path';
+import { UpdateItemInput } from './dto/update-item.input';
 
 @Resolver()
 export class ItemsResolver {
@@ -36,7 +34,7 @@ export class ItemsResolver {
   /*------------End of Query Items----------------*/
 
   @Mutation(() => ItemEntitiesReturn)
-  @UseGuards(JwtAuthGuard, ItemsAuthGuard)
+  @UseGuards(JwtAuthGuard, SellerRoleGuard)
   @Roles('seller', 'admin')
   createItem(
     @Args('createItemInput')
@@ -49,21 +47,25 @@ export class ItemsResolver {
   }
 
   @Mutation(() => String)
-  @UseGuards(JwtAuthGuard, ItemsAuthGuard)
+  @UseGuards(JwtAuthGuard, SellerRoleGuard)
   @Roles('seller', 'admin')
   async deleteItem(@Args('id') id: string, @Context() context) {
     return await this.itemsService.deleteItem(id, context.req.user);
   }
 
-  @Mutation(() => String)
-  async imageUpload(
-    @Args({ name: 'file', type: () => GraphQLUpload })
-    { filename, createReadStream }: FileUpload,
+  @Mutation(() => ItemEntitiesReturn)
+  @UseGuards(JwtAuthGuard, SellerRoleGuard)
+  @Roles('seller', 'admin')
+  async updateItem(
+    @Args('updateItemInput') updateItemInput: UpdateItemInput,
+    @Args({ name: 'file', type: () => [GraphQLUpload], nullable: true })
+    files: Promise<FileUpload>[],
+    @Context() context,
   ) {
-    console.log(filename);
-    const out = createWriteStream(`./src/images/${filename}`);
-    const steam = createReadStream();
-    steam.pipe(out);
-    return 'success';
+    return await this.itemsService.updateItem(
+      updateItemInput,
+      files,
+      context.req.user,
+    );
   }
 }

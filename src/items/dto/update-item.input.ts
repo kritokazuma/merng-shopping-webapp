@@ -2,6 +2,9 @@ import { Field, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
 export class UpdateItemInput {
+  @Field(() => String)
+  id: string;
+
   @Field(() => String, { nullable: true })
   description?: string;
 
@@ -14,6 +17,6 @@ export class UpdateItemInput {
   @Field(() => Int, { nullable: true })
   quantity?: number;
 
-  @Field(() => String, { nullable: true })
-  images?: string;
+  @Field(() => [Int], { nullable: true })
+  removedImage?: number[];
 }

@@ -94,7 +94,7 @@ export class ItemEntitiesReturn {
   comments: Comment[];
 
   @Field(() => SellerDetails)
-  seller: [SellerDetails];
+  seller: SellerDetails;
 
   @Field(() => String)
   createdAt: string;

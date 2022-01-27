@@ -48,7 +48,7 @@ export class AuthResolver {
 
   //Login route
   @Mutation(() => AuthUserReturn)
-  @UseGuards(GqlAuthGuard, JwtAuthGuard)
+  @UseGuards(GqlAuthGuard)
   async login(
     @Args('loginAuthInput') loginAuthInput: LoginAuthInput,
     @Context() context,

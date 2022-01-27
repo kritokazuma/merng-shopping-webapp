@@ -1,9 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 import { User } from 'src/user/user.schema';
-import * as mongooseDelete from 'mongoose-delete';
 
-console.log(User.name);
 class UserRatings {
   @Prop()
   username: string;
