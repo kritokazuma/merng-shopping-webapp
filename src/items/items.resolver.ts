@@ -1,7 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { CatagoryInput } from './dto/catagory.input';
+import { FilterItemInput } from './dto/filter-item.input';
 import { CreateItemInput } from './dto/create-item.input';
 import { ItemEntitiesReturn } from './entities/items.entities';
 import { SellerRoleGuard } from './seller.guards';
@@ -9,6 +9,7 @@ import { ItemsService } from './items.service';
 import { Roles } from './roles.decorator';
 import { GraphQLUpload, FileUpload } from 'graphql-upload';
 import { UpdateItemInput } from './dto/update-item.input';
+import { SearchInput } from './dto/search.input';
 
 @Resolver()
 export class ItemsResolver {
@@ -16,20 +17,30 @@ export class ItemsResolver {
 
   /*------------Query Items----------------*/
   @Query(() => [ItemEntitiesReturn])
-  async getItems() {
-    return await this.itemsService.getItems();
+  async getItems(@Args('filterItemInput') filterItemInput: FilterItemInput) {
+    return await this.itemsService.getItems(filterItemInput);
   }
 
   @Query(() => [ItemEntitiesReturn])
   async getItemsByCatagory(
-    @Args('catagoryInput') catagoryInput: CatagoryInput,
+    @Args('catagoryInput') catagoryInput: FilterItemInput,
   ) {
     return await this.itemsService.getItemsByCatagory(catagoryInput);
+  }
+
+  @Query(() => [ItemEntitiesReturn])
+  async getItemRandomly() {
+    return await this.itemsService.getItemRandomly();
   }
 
   @Query(() => ItemEntitiesReturn)
   async getItemById(@Args('id') id: string) {
     return await this.itemsService.getItemById(id);
+  }
+
+  @Query(() => [ItemEntitiesReturn])
+  async getItemBySearch(@Args('searchInput') searchInput: SearchInput) {
+    return await this.itemsService.getItemBySearch(searchInput);
   }
   /*------------End of Query Items----------------*/
 

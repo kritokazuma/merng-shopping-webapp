@@ -14,10 +14,6 @@ type AuthUserReturn {
   username: String!
 }
 
-input CatagoryInput {
-  catagory: [String!]!
-}
-
 type Comment {
   answer: Sender
   question: Sender
@@ -45,6 +41,12 @@ input CreateItemInput {
   price: Int!
   quantity: Int!
   warrenty: Boolean!
+}
+
+input FilterItemInput {
+  catagory: [String!]
+  limit: Int!
+  skip: Int!
 }
 
 input ForgetPasswordInput {
@@ -87,8 +89,10 @@ type Mutation {
 
 type Query {
   getItemById(id: String!): ItemEntitiesReturn!
-  getItems: [ItemEntitiesReturn!]!
-  getItemsByCatagory(catagoryInput: CatagoryInput!): [ItemEntitiesReturn!]!
+  getItemBySearch(searchInput: SearchInput!): [ItemEntitiesReturn!]!
+  getItemRandomly: [ItemEntitiesReturn!]!
+  getItems(filterItemInput: FilterItemInput!): [ItemEntitiesReturn!]!
+  getItemsByCatagory(catagoryInput: FilterItemInput!): [ItemEntitiesReturn!]!
   hello: String!
 }
 
@@ -101,6 +105,11 @@ type RegionAndTownship {
 input ResetPasswordInput {
   confirmPassword: String!
   password: String!
+}
+
+input SearchInput {
+  input: String!
+  priceRange: Int
 }
 
 type SellerDetails {

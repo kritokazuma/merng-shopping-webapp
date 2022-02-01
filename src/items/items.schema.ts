@@ -73,3 +73,4 @@ export class Item extends Document {
 }
 
 export const ItemSchema = SchemaFactory.createForClass(Item);
+ItemSchema.index({ label: 'text' });

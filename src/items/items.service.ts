@@ -7,11 +7,13 @@ import { Item } from './items.schema';
 import { UserService } from 'src/user/user.service';
 import { ForbiddenError } from 'apollo-server-express';
 import { GraphQLError } from 'graphql';
-import { CatagoryInput } from './dto/catagory.input';
+import { FilterItemInput } from './dto/filter-item.input';
 import { FileUpload } from 'graphql-upload';
 import { createWriteStream } from 'fs';
 import { UpdateItemInput } from './dto/update-item.input';
 import { readFile, unlink } from 'fs';
+import { ItemEntitiesReturn } from './entities/items.entities';
+import { SearchInput } from './dto/search.input';
 
 @Injectable()
 export class ItemsService {
@@ -74,22 +76,36 @@ export class ItemsService {
   }
 
   /* Get All Items in ascending */
-  async getItems() {
-    const getItems = await this.itemModel.find().sort({ createdAt: -1 });
+  async getItems(filterItemInput: FilterItemInput): Promise<Item[]> {
+    const getItems = await this.itemModel.aggregate([
+      { $match: {} },
+      { $limit: filterItemInput.limit },
+      { $skip: filterItemInput.skip },
+    ]);
 
     return getItems;
   }
 
-  /** Get Items By Catagoty
+  /** Get Items By Catagory
    * @Param catagoryInput is for filtering catagory
    */
-  async getItemsByCatagory(catagoryInput: CatagoryInput) {
+  async getItemsByCatagory(catagoryInput: FilterItemInput): Promise<Item[]> {
     const getItems = await this.itemModel.aggregate([
       {
         $match: { catagory: { $in: catagoryInput.catagory } },
       },
+      { $skip: catagoryInput.skip },
+      { $limit: catagoryInput.limit },
     ]);
     return getItems;
+  }
+
+  async getItemRandomly(): Promise<Item[]> {
+    return await this.itemModel.aggregate([
+      {
+        $sample: { size: 20 },
+      },
+    ]);
   }
 
   /**
@@ -112,7 +128,7 @@ export class ItemsService {
    * @param user user details from jwt
    * @returns string "deleted"
    */
-  async deleteItem(id: string, user: JwtDecodeReturnDto) {
+  async deleteItem(id: string, user: JwtDecodeReturnDto): Promise<string> {
     const Item = await this.itemModel.findById(id);
     if (Item) {
       if (Item.seller.toString() !== user.id) {
@@ -124,11 +140,18 @@ export class ItemsService {
     throw new GraphQLError('Item not found');
   }
 
+  /**
+   * update items
+   * @param updateItemInput inputs for update
+   * @param files file upload
+   * @param user jwtDecode
+   * @returns Item[]
+   */
   async updateItem(
     updateItemInput: UpdateItemInput,
     files: Promise<FileUpload>[],
     user: JwtDecodeReturnDto,
-  ) {
+  ): Promise<ItemEntitiesReturn> {
     const item = await this.itemModel.findById(updateItemInput.id);
     if (!item) throw new GraphQLError('item not found');
 
@@ -141,15 +164,32 @@ export class ItemsService {
       updateItemInput[val] && updateCbFn(val);
     });
 
+    //if user removed image
     if (updateItemInput.removedImage) {
-      const imagesArrayLength = item.images.length;
-      updateItemInput.removedImage.map(async (index) => {
-        const imageName = item.images[index];
-        this.removeImage(imageName);
-        const checkLength: boolean = item.images.length < imagesArrayLength;
-        const decreaseNum: number = checkLength ? 1 : 0;
-        item.images.splice(index - decreaseNum, 1);
-      });
+      /*if delete images not equal or grater than total image
+       update image */
+      if (
+        updateItemInput.removedImage.length < item.images.length ||
+        (updateItemInput.removedImage.length >= item.images.length &&
+          files?.length > 0)
+      ) {
+        //length of original array of images
+        const imagesArrayLength = item.images.length;
+
+        updateItemInput.removedImage.forEach(async (index) => {
+          const imageName = item.images[index];
+
+          //remove image from server
+          this.removeImage(imageName);
+
+          //get difference to add into later splice
+          const checkDifference: number =
+            imagesArrayLength - item.images.length;
+          item.images.splice(index - checkDifference, 1);
+        });
+      } else {
+        throw new GraphQLError('Item must have at least one image');
+      }
     }
 
     if (files && files.length > 0) {
@@ -157,10 +197,23 @@ export class ItemsService {
       item.images.push(...prefixNameArray);
     }
 
+    //update date
+    item.updatedAt = new Date().toISOString();
+
     await item.save();
     return item.populate({
       path: 'seller',
       select: ['name', 'avatar', 'phone', 'location'],
     });
+  }
+
+  async getItemBySearch(searchInput: SearchInput): Promise<Item[]> {
+    if (searchInput.priceRange) {
+      return await this.itemModel.aggregate([
+        { $match: { $text: { $search: searchInput.input } } },
+        { $match: { price: { $lt: searchInput.priceRange } } },
+      ]);
+    }
+    return await this.itemModel.find({ $text: { $search: searchInput.input } });
   }
 }

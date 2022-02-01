@@ -61,7 +61,7 @@ class SellerDetails {
 @ObjectType()
 export class ItemEntitiesReturn {
   @Field(() => String)
-  _id: string;
+  _id: any;
 
   @Field(() => String)
   label: string;
