@@ -32,12 +32,6 @@ export class AuthResolver {
     this.pubSub = new PubSub();
   }
 
-  //TEST route
-  @Query(() => String)
-  @UseGuards(JwtAuthGuard)
-  async hello(@Context() context) {
-    return 'hello world';
-  }
 
   //Register route
   @Mutation(() => AuthUserReturn)

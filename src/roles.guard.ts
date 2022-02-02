@@ -4,7 +4,7 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 import { JwtDecodeReturnDto } from 'src/auth/dto/auth-jwt-decode.dto';
 
 @Injectable()
-export class SellerRoleGuard implements CanActivate {
+export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
   canActivate(context: ExecutionContext) {
     const ctx = GqlExecutionContext.create(context);

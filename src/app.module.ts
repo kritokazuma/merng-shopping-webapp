@@ -8,6 +8,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ItemsModule } from './items/items.module';
 import { CommentsModule } from './comments/comments.module';
 import { GraphQLUpload } from 'graphql-upload';
+import { CartModule } from './cart/cart.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { GraphQLUpload } from 'graphql-upload';
     AuthModule,
     CommentsModule,
     ItemsModule,
+    CartModule,
   ],
   controllers: [],
   providers: [],

@@ -14,6 +14,11 @@ type AuthUserReturn {
   username: String!
 }
 
+type Cart {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 type Comment {
   answer: Sender
   question: Sender
@@ -32,6 +37,12 @@ input CreateAuthInput {
   password: String!
   phone: String!
   username: String!
+}
+
+input CreateCartInput {
+  """Example field (placeholder)"""
+  address: [Int!]!
+  items: [SingleItem!]!
 }
 
 input CreateItemInput {
@@ -78,22 +89,25 @@ input LoginAuthInput {
 type Mutation {
   addAddress(addressInput: AddressInput!): String!
   confirmResetPasswordOtp(confirmOtp: ConfirmOtp!): forgetPasswordConfirmOtpReturn!
+  createCart(createCartInput: CreateCartInput!): Cart!
   createItem(createItemInput: CreateItemInput!, file: [Upload!]!): ItemEntitiesReturn!
   deleteItem(id: String!): String!
   forgetPassword(forgetPasswordInput: ForgetPasswordInput!): String!
   login(loginAuthInput: LoginAuthInput!): AuthUserReturn!
   register(createAuthInput: CreateAuthInput!): AuthUserReturn!
+  removeCart(id: Int!): Cart!
   resetPassword(resetPasswordInput: ResetPasswordInput!): String!
+  updateCart(updateCartInput: UpdateCartInput!): Cart!
   updateItem(file: [Upload!], updateItemInput: UpdateItemInput!): ItemEntitiesReturn!
 }
 
 type Query {
+  cart(id: Int!): Cart!
   getItemById(id: String!): ItemEntitiesReturn!
   getItemBySearch(searchInput: SearchInput!): [ItemEntitiesReturn!]!
   getItemRandomly: [ItemEntitiesReturn!]!
   getItems(filterItemInput: FilterItemInput!): [ItemEntitiesReturn!]!
   getItemsByCatagory(catagoryInput: FilterItemInput!): [ItemEntitiesReturn!]!
-  hello: String!
 }
 
 type RegionAndTownship {
@@ -122,6 +136,20 @@ type SellerDetails {
 type Sender {
   comment: String!
   sendBy: String!
+}
+
+input SingleItem {
+  createdAt: String
+  itemId: String!
+  quantity: Int!
+  status: String
+}
+
+input UpdateCartInput {
+  """Example field (placeholder)"""
+  address: [Int!]
+  id: Int!
+  items: [SingleItem!]
 }
 
 input UpdateItemInput {

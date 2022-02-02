@@ -4,9 +4,9 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { FilterItemInput } from './dto/filter-item.input';
 import { CreateItemInput } from './dto/create-item.input';
 import { ItemEntitiesReturn } from './entities/items.entities';
-import { SellerRoleGuard } from './seller.guards';
+import { RolesGuard } from '../roles.guard';
 import { ItemsService } from './items.service';
-import { Roles } from './roles.decorator';
+import { Roles } from '../roles.decorator';
 import { GraphQLUpload, FileUpload } from 'graphql-upload';
 import { UpdateItemInput } from './dto/update-item.input';
 import { SearchInput } from './dto/search.input';
@@ -45,7 +45,7 @@ export class ItemsResolver {
   /*------------End of Query Items----------------*/
 
   @Mutation(() => ItemEntitiesReturn)
-  @UseGuards(JwtAuthGuard, SellerRoleGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('seller', 'admin')
   createItem(
     @Args('createItemInput')
@@ -58,14 +58,14 @@ export class ItemsResolver {
   }
 
   @Mutation(() => String)
-  @UseGuards(JwtAuthGuard, SellerRoleGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('seller', 'admin')
   async deleteItem(@Args('id') id: string, @Context() context) {
     return await this.itemsService.deleteItem(id, context.req.user);
   }
 
   @Mutation(() => ItemEntitiesReturn)
-  @UseGuards(JwtAuthGuard, SellerRoleGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('seller', 'admin')
   async updateItem(
     @Args('updateItemInput') updateItemInput: UpdateItemInput,
