@@ -12,7 +12,7 @@ import { CreateAuthInput } from './dto/create-auth.input';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { LoginAuthInput } from './dto/login-auth.input';
-import { AddressInput } from './dto/address-input.dto';
+import { AddressInput } from './dto/address.input';
 import { JwtDecodeReturnDto } from './dto/auth-jwt-decode.dto';
 import { Cache } from 'cache-manager';
 import { ForgetPasswordInput } from './dto/forget-password.input';
@@ -21,6 +21,8 @@ import * as otpGenerator from 'otp-generator';
 import { ConfirmOtp } from './dto/confirm-otp.input';
 import { ResetPasswordInput } from './dto/reset-password.input';
 import { JwtResetPasswordDto } from './dto/jwt-reset-password.dto';
+import { LoginAndRegisterDto } from './dto/login_n_register.dto';
+import { AuthUserReturn } from './entities/auth.entity';
 
 @Injectable()
 export class AuthService {
@@ -32,7 +34,7 @@ export class AuthService {
   ) {}
 
   //CREATE USER
-  async create(createAuthInput: CreateAuthInput) {
+  async create(createAuthInput: CreateAuthInput): Promise<LoginAndRegisterDto> {
     const User = await this.userService.find(createAuthInput);
     if (User) throw new UserInputError('username or email already register');
 
@@ -53,7 +55,7 @@ export class AuthService {
   }
 
   //LOGIN USER
-  async login(loginAuthInput: LoginAuthInput) {
+  async login(loginAuthInput: LoginAuthInput): Promise<AuthUserReturn> {
     const User = await this.userService.find(loginAuthInput);
 
     const comparePassword = !User
@@ -63,8 +65,6 @@ export class AuthService {
       throw new UserInputError('wrong username or password');
     }
 
-    
-
     return {
       email: User.email,
       username: User.username,
@@ -73,14 +73,13 @@ export class AuthService {
   }
 
   //Add Address
-  async address(addressInput: AddressInput, user: JwtDecodeReturnDto) {
+  async address(
+    addressInput: AddressInput,
+    user: JwtDecodeReturnDto,
+  ): Promise<string> {
     const User = await this.userService.findById(user.id);
     if (!User) throw new AuthenticationError('User not found');
-    User.location = {
-      region: addressInput.region,
-      township: addressInput.township,
-      address: [addressInput.address],
-    };
+    User.location.push(addressInput);
     await User.save();
     return 'success';
   }
@@ -136,7 +135,9 @@ export class AuthService {
     return 'requested';
   }
 
-  async comfirmResetPasswordOtp(confirmOtp: ConfirmOtp) {
+  async comfirmResetPasswordOtp(
+    confirmOtp: ConfirmOtp,
+  ): Promise<{ token: string }> {
     const User = await this.userService.findByEmail(confirmOtp.email);
     const otp: string = await this.cacheManager.get(confirmOtp.email);
     const compareOtp = !User
@@ -160,7 +161,7 @@ export class AuthService {
   async resetPassword(
     inputNewPassword: ResetPasswordInput,
     jwtResetPassword: JwtResetPasswordDto,
-  ) {
+  ): Promise<string> {
     if (jwtResetPassword.type !== 'reset')
       throw new AuthenticationError('wrong token');
 

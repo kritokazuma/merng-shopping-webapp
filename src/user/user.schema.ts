@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-@Schema()
+@Schema({ _id: false })
 class RegionNTownship {
   @Prop({ required: true })
   region: string;
@@ -10,11 +10,16 @@ class RegionNTownship {
   township: string;
 
   @Prop()
-  address: string[];
+  address: string;
+}
+
+interface MongoDbPrefix {
+  _doc: any;
 }
 
 @Schema()
-export class User extends Document {
+export class User extends Document implements MongoDbPrefix {
+  _doc: any;
   @Prop({ required: true })
   name: string;
 
@@ -30,8 +35,8 @@ export class User extends Document {
   @Prop({ required: true })
   phone: string;
 
-  @Prop()
-  location: RegionNTownship;
+  @Prop([RegionNTownship])
+  location: RegionNTownship[];
 
   @Prop({ default: 'image/default' })
   avatar: string;

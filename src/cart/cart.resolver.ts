@@ -12,13 +12,19 @@ import { RolesGuard } from 'src/roles.guard';
 export class CartResolver {
   constructor(private readonly cartService: CartService) {}
 
-  @Mutation(() => Cart)
+  /**
+   * Add Item to Buy list (cart)
+   * @param createCartInput item credentials
+   * @param context user
+   * @returns String
+   */
+  @Mutation(() => String)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('buyer')
   async createCart(
     @Args('createCartInput') createCartInput: CreateCartInput,
     @Context() context,
-  ) {
+  ): Promise<string> {
     return await this.cartService.create(createCartInput, context.req.user);
   }
 

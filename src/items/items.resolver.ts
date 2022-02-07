@@ -45,8 +45,8 @@ export class ItemsResolver {
   /*------------End of Query Items----------------*/
 
   @Mutation(() => ItemEntitiesReturn)
-  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('seller', 'admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   createItem(
     @Args('createItemInput')
     createItemInput: CreateItemInput,

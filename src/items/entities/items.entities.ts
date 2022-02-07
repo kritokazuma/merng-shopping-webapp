@@ -32,15 +32,15 @@ class Comment {
 }
 
 @ObjectType()
-class RegionAndTownship {
+export class RegionAndTownship {
   @Field(() => String)
   region: string;
 
   @Field(() => String)
   township: string;
 
-  @Field(() => [String])
-  address: string[];
+  @Field(() => String)
+  address: string;
 }
 
 @ObjectType()
@@ -85,7 +85,7 @@ export class ItemEntitiesReturn {
   isAvailable: boolean;
 
   @Field(() => Boolean)
-  warrenty: Boolean;
+  warrenty: boolean;
 
   @Field(() => [UserRatings], { nullable: true })
   ratings?: UserRatings[];

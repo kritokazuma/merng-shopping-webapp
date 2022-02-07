@@ -1,5 +1,5 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
-import { isDate, IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+import { InputType, Field } from '@nestjs/graphql';
+import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
 
 @InputType()
 export class CreateAuthInput {
@@ -13,18 +13,18 @@ export class CreateAuthInput {
 
   @Field(() => String)
   @MinLength(6, {
-    message: "username must not be less than 6 characters"
+    message: 'username must not be less than 6 characters',
   })
   username: string;
 
   @Field(() => String)
   @MinLength(6, {
-    message: "password must not be less than 6 characters"
+    message: 'password must not be less than 6 characters',
   })
   password: string;
 
   @Field(() => String)
-  dateOfBirth?: Date;
+  dateOfBirth?: string;
 
   @Field(() => String)
   gender?: string;
