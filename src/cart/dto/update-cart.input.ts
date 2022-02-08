@@ -1,4 +1,4 @@
-import { CreateCartInput } from './create-cart.input';
+import { CreateCartInput } from '../../buyer/dto/create-cart.input';
 import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
 
 @InputType()

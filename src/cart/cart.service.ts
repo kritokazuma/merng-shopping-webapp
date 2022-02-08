@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 import { JwtDecodeReturnDto } from 'src/auth/dto/auth-jwt-decode.dto';
 import { Item } from 'src/items/items.schema';
 import { Cart } from './cart.schema';
-import { CreateCartInput } from './dto/create-cart.input';
+import { CreateCartInput } from '../buyer/dto/create-cart.input';
 import { UpdateCartInput } from './dto/update-cart.input';
 import { User } from 'src/user/user.schema';
 

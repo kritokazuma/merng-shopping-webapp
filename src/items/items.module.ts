@@ -11,6 +11,6 @@ import { ItemsResolver } from './items.resolver';
     MongooseModule.forFeature([{ name: Item.name, schema: ItemSchema }]),
   ],
   providers: [ItemsService, ItemsResolver],
-  exports: [MongooseModule],
+  exports: [MongooseModule, ItemsService],
 })
 export class ItemsModule {}

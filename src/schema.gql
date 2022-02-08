@@ -14,11 +14,6 @@ type AuthUserReturn {
   username: String!
 }
 
-type Cart {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
 type Comment {
   answer: Sender
   question: Sender
@@ -94,14 +89,11 @@ type Mutation {
   forgetPassword(forgetPasswordInput: ForgetPasswordInput!): String!
   login(loginAuthInput: LoginAuthInput!): AuthUserReturn!
   register(createAuthInput: CreateAuthInput!): AuthUserReturn!
-  removeCart(id: Int!): Cart!
   resetPassword(resetPasswordInput: ResetPasswordInput!): String!
-  updateCart(updateCartInput: UpdateCartInput!): Cart!
   updateItem(file: [Upload!], updateItemInput: UpdateItemInput!): ItemEntitiesReturn!
 }
 
 type Query {
-  cart(id: Int!): Cart!
   getItemById(id: String!): ItemEntitiesReturn!
   getItemBySearch(searchInput: SearchInput!): [ItemEntitiesReturn!]!
   getItemRandomly: [ItemEntitiesReturn!]!
@@ -147,12 +139,6 @@ type Sender {
 input SingleItem {
   itemId: String!
   quantity: Int!
-}
-
-input UpdateCartInput {
-  id: Int!
-  items: [SingleItem!]
-  location: RegionNTownship
 }
 
 input UpdateItemInput {

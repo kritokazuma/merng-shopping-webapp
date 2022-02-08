@@ -1,14 +1,7 @@
-import { UseGuards } from '@nestjs/common';
-import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Resolver, Query, Args } from '@nestjs/graphql';
 import { FilterItemInput } from './dto/filter-item.input';
-import { CreateItemInput } from './dto/create-item.input';
 import { ItemEntitiesReturn } from './entities/items.entities';
-import { RolesGuard } from '../roles.guard';
 import { ItemsService } from './items.service';
-import { Roles } from '../roles.decorator';
-import { GraphQLUpload, FileUpload } from 'graphql-upload';
-import { UpdateItemInput } from './dto/update-item.input';
 import { SearchInput } from './dto/search.input';
 
 @Resolver()
@@ -43,40 +36,4 @@ export class ItemsResolver {
     return await this.itemsService.getItemBySearch(searchInput);
   }
   /*------------End of Query Items----------------*/
-
-  @Mutation(() => ItemEntitiesReturn)
-  @Roles('seller', 'admin')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  createItem(
-    @Args('createItemInput')
-    createItemInput: CreateItemInput,
-    @Args({ name: 'file', type: () => [GraphQLUpload] })
-    file: Promise<FileUpload>[],
-    @Context() context,
-  ) {
-    return this.itemsService.create(createItemInput, context.req.user, file);
-  }
-
-  @Mutation(() => String)
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('seller', 'admin')
-  async deleteItem(@Args('id') id: string, @Context() context) {
-    return await this.itemsService.deleteItem(id, context.req.user);
-  }
-
-  @Mutation(() => ItemEntitiesReturn)
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('seller', 'admin')
-  async updateItem(
-    @Args('updateItemInput') updateItemInput: UpdateItemInput,
-    @Args({ name: 'file', type: () => [GraphQLUpload], nullable: true })
-    files: Promise<FileUpload>[],
-    @Context() context,
-  ) {
-    return await this.itemsService.updateItem(
-      updateItemInput,
-      files,
-      context.req.user,
-    );
-  }
 }

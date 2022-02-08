@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { JwtDecodeReturnDto } from 'src/auth/dto/auth-jwt-decode.dto';
-import { CreateItemInput } from './dto/create-item.input';
+import { CreateItemInput } from '../seller/dto/create-item.input';
 import { Item } from './items.schema';
 import { UserService } from 'src/user/user.service';
 import { ForbiddenError } from 'apollo-server-express';
@@ -10,7 +10,7 @@ import { GraphQLError } from 'graphql';
 import { FilterItemInput } from './dto/filter-item.input';
 import { FileUpload } from 'graphql-upload';
 import { createWriteStream } from 'fs';
-import { UpdateItemInput } from './dto/update-item.input';
+import { UpdateItemInput } from '../seller/dto/update-item.input';
 import { readFile, unlink } from 'fs';
 import { ItemEntitiesReturn } from './entities/items.entities';
 import { SearchInput } from './dto/search.input';
@@ -47,6 +47,7 @@ export class ItemsService {
   }
 
   /**
+   * create new items
    * @Param CreateInput contains items data
    **/
   async create(
@@ -54,16 +55,12 @@ export class ItemsService {
     user: JwtDecodeReturnDto,
     files: Promise<FileUpload>[],
   ) {
-    let images = [];
+    const images = [];
 
     if (files.length > 0) {
       const prefixName = await this.saveImage(files, user.id);
       images.push(...prefixName);
     }
-
-    (await files).map(async (file) => {
-      const { filename, createReadStream } = await file;
-    });
 
     const Item = new this.itemModel({
       ...createItemInput,
@@ -75,7 +72,11 @@ export class ItemsService {
     return Item;
   }
 
-  /* Get All Items in ascending */
+  /**
+   * Get All Item In Ascending
+   * @param filterItemInput catagoty, limit and skip
+   * @returns Items
+   */
   async getItems(filterItemInput: FilterItemInput): Promise<Item[]> {
     const getItems = await this.itemModel.aggregate([
       { $match: {} },
@@ -88,6 +89,7 @@ export class ItemsService {
 
   /** Get Items By Catagory
    * @Param catagoryInput is for filtering catagory
+   * @returns Items
    */
   async getItemsByCatagory(catagoryInput: FilterItemInput): Promise<Item[]> {
     const getItems = await this.itemModel.aggregate([
@@ -100,6 +102,10 @@ export class ItemsService {
     return getItems;
   }
 
+  /**
+   * return intems in random
+   * @returns items in random
+   */
   async getItemRandomly(): Promise<Item[]> {
     return await this.itemModel.aggregate([
       {
@@ -109,7 +115,7 @@ export class ItemsService {
   }
 
   /**
-   *
+   * Get Single Item by Id
    * @param id User Id
    * @returns singleItem by Id
    */
@@ -123,7 +129,7 @@ export class ItemsService {
   }
 
   /**
-   *
+   * Delete Item By Seller
    * @param id id
    * @param user user details from jwt
    * @returns string "deleted"
@@ -207,6 +213,11 @@ export class ItemsService {
     });
   }
 
+  /**
+   * Search item by text and range
+   * @param searchInput input and price range
+   * @returns
+   */
   async getItemBySearch(searchInput: SearchInput): Promise<Item[]> {
     if (searchInput.priceRange) {
       return await this.itemModel.aggregate([

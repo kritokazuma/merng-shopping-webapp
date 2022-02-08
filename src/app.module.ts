@@ -9,6 +9,8 @@ import { ItemsModule } from './items/items.module';
 import { CommentsModule } from './comments/comments.module';
 import { GraphQLUpload } from 'graphql-upload';
 import { CartModule } from './cart/cart.module';
+import { SellerModule } from './seller/seller.module';
+import { BuyerModule } from './buyer/buyer.module';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { CartModule } from './cart/cart.module';
     CommentsModule,
     ItemsModule,
     CartModule,
+    SellerModule,
+    BuyerModule,
   ],
   controllers: [],
   providers: [],
