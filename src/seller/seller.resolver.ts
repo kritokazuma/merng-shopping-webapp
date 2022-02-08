@@ -18,6 +18,13 @@ export class SellerResolver {
     private sellerService: SellerService,
   ) {}
 
+  /**
+   * Create Items
+   * @param createItemInput item enities
+   * @param file image files
+   * @param context user
+   * @returns Item
+   */
   @Mutation(() => ItemEntitiesReturn)
   @Roles('seller', 'admin')
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -27,10 +34,16 @@ export class SellerResolver {
     @Args({ name: 'file', type: () => [GraphQLUpload] })
     file: Promise<FileUpload>[],
     @Context() context,
-  ) {
+  ): Promise<ItemEntitiesReturn> {
     return this.itemsService.create(createItemInput, context.req.user, file);
   }
 
+  /**
+   * Delete Item
+   * @param id item id
+   * @param context user
+   * @returns string
+   */
   @Mutation(() => String)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('seller', 'admin')
@@ -38,6 +51,13 @@ export class SellerResolver {
     return await this.itemsService.deleteItem(id, context.req.user);
   }
 
+  /**
+   * Update Item By Seller
+   * @param updateItemInput label, price, description, etc..
+   * @param files image files
+   * @param context user
+   * @returns Item
+   */
   @Mutation(() => ItemEntitiesReturn)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('seller', 'admin')

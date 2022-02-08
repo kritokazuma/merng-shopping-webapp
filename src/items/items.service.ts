@@ -54,7 +54,7 @@ export class ItemsService {
     createItemInput: CreateItemInput,
     user: JwtDecodeReturnDto,
     files: Promise<FileUpload>[],
-  ) {
+  ): Promise<ItemEntitiesReturn> {
     const images = [];
 
     if (files.length > 0) {
