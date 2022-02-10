@@ -46,6 +46,9 @@ export class RegionAndTownship {
 @ObjectType()
 class SellerDetails {
   @Field(() => String)
+  _id: string;
+
+  @Field(() => String)
   name: string;
 
   @Field(() => String)

@@ -11,11 +11,14 @@ import { GraphQLUpload } from 'graphql-upload';
 import { CartModule } from './cart/cart.module';
 import { SellerModule } from './seller/seller.module';
 import { BuyerModule } from './buyer/buyer.module';
+import { OrderModule } from './order/order.module';
+import { ApolloDriver } from '@nestjs/apollo';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     GraphQLModule.forRoot({
+      driver: ApolloDriver,
       subscriptions: {
         'graphql-ws': true,
       },
@@ -31,8 +34,11 @@ import { BuyerModule } from './buyer/buyer.module';
     CartModule,
     SellerModule,
     BuyerModule,
+    OrderModule,
   ],
   controllers: [],
   providers: [],
 })
 export class AppModule {}
+
+// console.log(process.cwd());

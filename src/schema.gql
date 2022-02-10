@@ -125,6 +125,7 @@ input SearchInput {
 }
 
 type SellerDetails {
+  _id: String!
   avatar: String!
   location: RegionAndTownship!
   name: String!

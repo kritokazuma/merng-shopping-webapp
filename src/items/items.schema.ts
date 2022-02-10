@@ -65,11 +65,11 @@ export class Item extends Document {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: User.name })
   seller: MongooseSchema.Types.ObjectId;
 
-  @Prop({ type: Date, default: new Date().toISOString() })
+  @Prop({ type: String, default: new Date().toLocaleString() })
   createdAt: string;
 
   @Prop({ type: Date })
-  updatedAt: string;
+  updatedAt?: string;
 }
 
 export const ItemSchema = SchemaFactory.createForClass(Item);

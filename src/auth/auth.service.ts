@@ -125,10 +125,10 @@ export class AuthService {
     );
 
     // Send Email
-    const info = await transporter.sendMail({
+    await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: forgetPasswordInput.email,
-      subject: `${otp} is your account recovery code`,
+      subject: `<b>${otp}</b> is your account recovery code`,
       html: `<p>Hi ${User.username}</p><p>We recived a request to rest your account.Enter following code. ${otp}</p>`,
     });
 

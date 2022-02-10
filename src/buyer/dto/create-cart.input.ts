@@ -3,13 +3,13 @@ import { Schema } from 'mongoose';
 
 @InputType()
 export class RegionNTownship {
-  @Field()
+  @Field(() => String)
   region: string;
 
-  @Field()
+  @Field(() => String)
   township: string;
 
-  @Field()
+  @Field(() => String)
   address: string;
 }
 

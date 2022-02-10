@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 @Schema({ _id: false })
-class RegionNTownship {
+export class RegionNTownship {
   @Prop({ required: true })
   region: string;
 

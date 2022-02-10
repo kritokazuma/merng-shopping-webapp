@@ -12,7 +12,6 @@ import { FileUpload } from 'graphql-upload';
 import { createWriteStream } from 'fs';
 import { UpdateItemInput } from '../seller/dto/update-item.input';
 import { readFile, unlink } from 'fs';
-import { ItemEntitiesReturn } from './entities/items.entities';
 import { SearchInput } from './dto/search.input';
 
 @Injectable()
@@ -54,7 +53,7 @@ export class ItemsService {
     createItemInput: CreateItemInput,
     user: JwtDecodeReturnDto,
     files: Promise<FileUpload>[],
-  ): Promise<ItemEntitiesReturn> {
+  ): Promise<Item> {
     const images = [];
 
     if (files.length > 0) {
@@ -122,7 +121,7 @@ export class ItemsService {
   async getItemById(id: string) {
     const getItem = await this.itemModel.findById(id).populate({
       path: 'seller',
-      select: ['name', 'avatar', 'phone', 'location'],
+      select: ['_id', 'name', 'avatar', 'phone', 'location'],
     });
 
     return getItem;
@@ -157,7 +156,7 @@ export class ItemsService {
     updateItemInput: UpdateItemInput,
     files: Promise<FileUpload>[],
     user: JwtDecodeReturnDto,
-  ): Promise<ItemEntitiesReturn> {
+  ): Promise<Item> {
     const item = await this.itemModel.findById(updateItemInput.id);
     if (!item) throw new GraphQLError('item not found');
 

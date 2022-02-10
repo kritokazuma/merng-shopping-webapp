@@ -1,3 +1,4 @@
+import { Schema } from 'mongoose';
 export class JwtDecodeReturnDto {
   id: string;
   email: string;

@@ -10,6 +10,7 @@ import { CreateItemInput } from 'src/seller/dto/create-item.input';
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
 import { ItemsService } from 'src/items/items.service';
 import { UpdateItemInput } from 'src/seller/dto/update-item.input';
+import { Item } from 'src/items/items.schema';
 
 @Resolver()
 export class SellerResolver {
@@ -34,7 +35,7 @@ export class SellerResolver {
     @Args({ name: 'file', type: () => [GraphQLUpload] })
     file: Promise<FileUpload>[],
     @Context() context,
-  ): Promise<ItemEntitiesReturn> {
+  ): Promise<Item> {
     return this.itemsService.create(createItemInput, context.req.user, file);
   }
 
@@ -66,7 +67,7 @@ export class SellerResolver {
     @Args({ name: 'file', type: () => [GraphQLUpload], nullable: true })
     files: Promise<FileUpload>[],
     @Context() context,
-  ) {
+  ): Promise<Item> {
     return await this.itemsService.updateItem(
       updateItemInput,
       files,

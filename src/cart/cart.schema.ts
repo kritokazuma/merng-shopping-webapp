@@ -1,19 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
+import { RegionNTownship } from 'src/user/user.schema';
 import { User } from 'src/user/user.schema';
 import { Item } from 'src/items/items.schema';
-
-@Schema()
-export class RegionNTownship {
-  @Prop({ required: true })
-  region: string;
-
-  @Prop({ required: true })
-  township: string;
-
-  @Prop()
-  address: string;
-}
 
 @Schema({ _id: false })
 class SingleItem {
@@ -40,6 +29,9 @@ class CartItems {
 
   @Prop({ default: 'pending' })
   status?: string;
+
+  @Prop({ type: String })
+  processFinishTime?: string;
 }
 
 @Schema()
