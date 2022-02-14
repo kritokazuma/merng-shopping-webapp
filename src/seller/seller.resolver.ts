@@ -1,7 +1,7 @@
 import { Resolver } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { SellerService } from './seller.service';
-import { ItemEntitiesReturn } from 'src/items/entities/items.entities';
+import { ItemsEntities } from 'src/items/entities/items.entities';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Args, Context, Mutation } from '@nestjs/graphql';
 import { Roles } from 'src/roles.decorator';
@@ -26,7 +26,7 @@ export class SellerResolver {
    * @param context user
    * @returns Item
    */
-  @Mutation(() => ItemEntitiesReturn)
+  @Mutation(() => ItemsEntities)
   @Roles('seller', 'admin')
   @UseGuards(JwtAuthGuard, RolesGuard)
   createItem(
@@ -59,7 +59,7 @@ export class SellerResolver {
    * @param context user
    * @returns Item
    */
-  @Mutation(() => ItemEntitiesReturn)
+  @Mutation(() => ItemsEntities)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('seller', 'admin')
   async updateItem(
@@ -74,4 +74,9 @@ export class SellerResolver {
       context.req.user,
     );
   }
+
+  @Mutation(() => ItemsEntities)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('seller', 'admin')
+  async updateItemStatusBySeller() {}
 }

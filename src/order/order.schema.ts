@@ -3,6 +3,7 @@ import { Document, Schema as MongooseSchema } from 'mongoose';
 import { RegionNTownship } from 'src/user/user.schema';
 import { Item } from 'src/items/items.schema';
 import { User } from 'src/user/user.schema';
+import { Cart } from 'src/cart/cart.schema';
 
 @Schema()
 export class Order extends Document {
@@ -14,6 +15,9 @@ export class Order extends Document {
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: Item.name })
   itemId: MongooseSchema.Types.ObjectId;
+
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: Cart.name })
+  cartId: MongooseSchema.Types.ObjectId;
 
   @Prop({ type: Number })
   quantity: number;

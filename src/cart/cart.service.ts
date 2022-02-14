@@ -51,11 +51,12 @@ export class CartService {
             throw new GraphQLError('item not found');
 
           reduce && reduce(SingleItem, item.quantity);
-          createCart && createCart(this.cartModel);
+          const cartId = createCart && (await createCart(this.cartModel));
           orderAdd &&
             orderAdd(
               item.itemId,
               SingleItem.seller._id,
+              cartId,
               item.quantity,
               this.orderModel,
             );
@@ -76,21 +77,15 @@ export class CartService {
     }
 
     //If there is a cart in collection, push to cart. If doesn't create new one
-    async function addItemToCart(cartModel: Model<Cart>): Promise<void> {
+    async function addItemToCart(cartModel: Model<Cart>): Promise<string> {
       try {
-        const checkCart = await cartModel.findOne({ user: user.id });
-        //if cart, push to collection
-        if (checkCart) {
-          checkCart.cart.push(createCartInput);
-          await checkCart.save();
-        } else {
-          //create new collection
-          const addToCart = new cartModel({
-            user: user.id,
-            cart: [createCartInput],
-          });
-          await addToCart.save();
-        }
+        //create new collection
+        const addToCart = new cartModel({
+          userId: user.id,
+          cart: [createCartInput],
+        });
+        await addToCart.save();
+        return addToCart._id;
       } catch (err) {
         throw new GraphQLError(err);
       }
@@ -106,6 +101,7 @@ export class CartService {
     async function addToOrderAndAllOrders(
       itemId,
       sellerId,
+      cartId,
       quantity,
       orderModel: Model<Order>,
     ): Promise<void> {
@@ -113,6 +109,7 @@ export class CartService {
         sellerId: sellerId,
         buyerId: user.id,
         itemId,
+        cartId,
         quantity,
         location: createCartInput.location,
       });
@@ -134,12 +131,28 @@ export class CartService {
     return 'added to list';
   }
 
-  findAll() {
-    return `This action returns all cart`;
+  async findAll(user: JwtDecodeReturnDto) {
+    return await this.cartModel.find({ userId: user.id }).populate({
+      path: 'cart',
+      populate: {
+        path: 'items',
+        populate: 'itemId',
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} cart`;
+  async findOne(cartId: string, user: JwtDecodeReturnDto) {
+    const cart = await this.cartModel.findById(cartId).populate({
+      path: 'cart',
+      populate: {
+        path: 'items',
+        populate: 'itemId',
+      },
+    });
+    if (cart.userId.toString() === user.id) {
+      return cart;
+    }
+    throw new GraphQLError('u must be buyer of this cart');
   }
 
   update(id: number, updateCartInput: UpdateCartInput) {

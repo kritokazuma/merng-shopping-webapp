@@ -62,7 +62,7 @@ class SellerDetails {
 }
 
 @ObjectType()
-export class ItemEntitiesReturn {
+export class ItemsEntities {
   @Field(() => String)
   _id: any;
 

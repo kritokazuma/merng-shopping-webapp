@@ -14,6 +14,20 @@ type AuthUserReturn {
   username: String!
 }
 
+type CartEntities {
+  _id: String!
+  cart: [CartItems!]!
+  createdAt: String!
+  userId: String!
+}
+
+type CartItems {
+  items: [SingleCartItem!]!
+  location: RegionAndTownship!
+  processFinishTime: String
+  status: String!
+}
+
 type Comment {
   answer: Sender
   question: Sender
@@ -58,7 +72,7 @@ input ForgetPasswordInput {
   email: String!
 }
 
-type ItemEntitiesReturn {
+type ItemsEntities {
   _id: String!
   catagory: [String!]!
   comments: [Comment!]
@@ -84,21 +98,24 @@ type Mutation {
   addAddress(addressInput: AddressInput!): String!
   confirmResetPasswordOtp(confirmOtp: ConfirmOtp!): forgetPasswordConfirmOtpReturn!
   createCart(createCartInput: CreateCartInput!): String!
-  createItem(createItemInput: CreateItemInput!, file: [Upload!]!): ItemEntitiesReturn!
+  createItem(createItemInput: CreateItemInput!, file: [Upload!]!): ItemsEntities!
   deleteItem(id: String!): String!
   forgetPassword(forgetPasswordInput: ForgetPasswordInput!): String!
   login(loginAuthInput: LoginAuthInput!): AuthUserReturn!
   register(createAuthInput: CreateAuthInput!): AuthUserReturn!
   resetPassword(resetPasswordInput: ResetPasswordInput!): String!
-  updateItem(file: [Upload!], updateItemInput: UpdateItemInput!): ItemEntitiesReturn!
+  updateItem(file: [Upload!], updateItemInput: UpdateItemInput!): ItemsEntities!
+  updateItemStatusBySeller: ItemsEntities!
 }
 
 type Query {
-  getItemById(id: String!): ItemEntitiesReturn!
-  getItemBySearch(searchInput: SearchInput!): [ItemEntitiesReturn!]!
-  getItemRandomly: [ItemEntitiesReturn!]!
-  getItems(filterItemInput: FilterItemInput!): [ItemEntitiesReturn!]!
-  getItemsByCatagory(catagoryInput: FilterItemInput!): [ItemEntitiesReturn!]!
+  getCart(cartId: String!): CartEntities!
+  getCarts: [CartEntities!]!
+  getItemById(id: String!): ItemsEntities!
+  getItemBySearch(searchInput: SearchInput!): [ItemsEntities!]!
+  getItemRandomly: [ItemsEntities!]!
+  getItems(filterItemInput: FilterItemInput!): [ItemsEntities!]!
+  getItemsByCatagory(catagoryInput: FilterItemInput!): [ItemsEntities!]!
   getUserInfo: UserEntities!
 }
 
@@ -135,6 +152,12 @@ type SellerDetails {
 type Sender {
   comment: String!
   sendBy: String!
+}
+
+type SingleCartItem {
+  itemId: ItemsEntities!
+  quantity: Int!
+  status: String!
 }
 
 input SingleItem {

@@ -21,9 +21,6 @@ class CartItems {
   @Prop([SingleItem])
   items: SingleItem[];
 
-  @Prop({ type: String, default: new Date().toLocaleString() })
-  createdAt?: string;
-
   @Prop()
   location: RegionNTownship;
 
@@ -37,10 +34,13 @@ class CartItems {
 @Schema()
 export class Cart extends Document {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: User.name })
-  user: MongooseSchema.Types.ObjectId;
+  userId: MongooseSchema.Types.ObjectId;
 
   @Prop([CartItems])
   cart: Array<CartItems>;
+
+  @Prop({ type: String, default: new Date().toLocaleString() })
+  createdAt?: string;
 }
 
 export const CartSchema = SchemaFactory.createForClass(Cart);

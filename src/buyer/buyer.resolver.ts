@@ -5,6 +5,7 @@ import { CartService } from 'src/cart/cart.service';
 import { CreateCartInput } from 'src/buyer/dto/create-cart.input';
 import { Roles } from 'src/roles.decorator';
 import { RolesGuard } from 'src/roles.guard';
+import { CartEntities } from './entities/cart.entity';
 
 @Resolver()
 export class BuyerResolver {
@@ -24,5 +25,19 @@ export class BuyerResolver {
     @Context() context,
   ): Promise<string> {
     return await this.cartService.create(createCartInput, context.req.user);
+  }
+
+  @Query(() => [CartEntities])
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('buyer')
+  async getCarts(@Context() context) {
+    return await this.cartService.findAll(context.req.user);
+  }
+
+  @Query(() => CartEntities)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('buyer', 'admin')
+  async getCart(@Args('cartId') cartId: string, @Context() context) {
+    return await this.cartService.findOne(cartId, context.req.user);
   }
 }
