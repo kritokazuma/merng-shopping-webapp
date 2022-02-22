@@ -2,12 +2,30 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { RegionAndTownship } from 'src/items/entities/items.entities';
 
 @ObjectType()
-export class OrderEntities {
+class User {
   @Field(() => String)
-  sellerId: string;
+  name: string;
 
   @Field(() => String)
-  buyerId: string;
+  username: string;
+
+  @Field(() => String)
+  email: string;
+
+  @Field(() => String)
+  phone: string;
+}
+
+@ObjectType()
+export class OrderEntities {
+  @Field(() => String)
+  _id: string;
+
+  @Field(() => User)
+  sellerId: User;
+
+  @Field(() => User)
+  buyerId: User;
 
   @Field(() => String)
   itemId: string;

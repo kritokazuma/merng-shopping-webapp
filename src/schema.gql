@@ -108,6 +108,18 @@ type Mutation {
   updateItemStatusBySeller: ItemsEntities!
 }
 
+type OrderEntities {
+  _id: String!
+  buyerId: User!
+  cartId: String!
+  createdAt: String!
+  itemId: String!
+  location: RegionAndTownship!
+  quantity: Int!
+  sellerId: User!
+  status: String!
+}
+
 type Query {
   getCart(cartId: String!): CartEntities!
   getCarts: [CartEntities!]!
@@ -116,6 +128,8 @@ type Query {
   getItemRandomly: [ItemsEntities!]!
   getItems(filterItemInput: FilterItemInput!): [ItemsEntities!]!
   getItemsByCatagory(catagoryInput: FilterItemInput!): [ItemsEntities!]!
+  getOrder(id: String!): OrderEntities!
+  getOrders(filterItemInput: FilterItemInput!): [OrderEntities!]!
   getUserInfo: UserEntities!
 }
 
@@ -176,6 +190,13 @@ input UpdateItemInput {
 
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
+
+type User {
+  email: String!
+  name: String!
+  phone: String!
+  username: String!
+}
 
 type UserEntities {
   _id: String!
