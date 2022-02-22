@@ -157,7 +157,7 @@ export class ItemsService {
     files: Promise<FileUpload>[],
     user: JwtDecodeReturnDto,
   ): Promise<Item> {
-    const item = await this.itemModel.findById(updateItemInput.id);
+    const item = await this.getItemById(updateItemInput.id);
     if (!item) throw new GraphQLError('item not found');
 
     // prefix array for input check

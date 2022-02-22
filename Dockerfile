@@ -12,7 +12,7 @@ COPY . .
 
 ENV PORT=4000
 
-EXPOSE $PORT
+EXPOSE $PORT 27017
 
 CMD ["pnpm", "start:dev"]
 

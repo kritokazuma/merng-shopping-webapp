@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { GraphQLError } from 'graphql';
+import { ApolloError, UserInputError } from 'apollo-server-express';
 import { JwtDecodeReturnDto } from 'src/auth/dto/auth-jwt-decode.dto';
 import { Item } from 'src/items/items.schema';
 import { Cart } from './cart.schema';
@@ -24,109 +24,51 @@ export class CartService {
     user: JwtDecodeReturnDto,
   ): Promise<string> {
     const User = await this.userModel.findById(user.id).catch((err) => {
-      throw new GraphQLError(err);
+      throw new UserInputError(err);
     });
-    if (!User.location) throw new GraphQLError('add address first');
+    if (!User.location) throw new UserInputError('add address first');
+
+    const itemIdArray = createCartInput.items.map((item) => {
+      return item.itemId;
+    });
+
+    const checkItems = await this.itemModel.find().where('_id').in(itemIdArray);
+
+    if (checkItems.length !== createCartInput.items.length)
+      throw new ApolloError('item not found');
+
+    //---------create new cart and save
+    const cart = new this.cartModel({
+      userId: user.id,
+      cart: [createCartInput],
+    });
+    await cart.save();
+    //----------end-------------------
 
     /**
-     * check collection and create Cart and Order collections
-     * @param cartInput create cart input from user
-     * @param reduce reduce function to reduce quantity of item from item collection
-     * @param createCart create cart collection or if it has, push to collection
-     * @param orderAdd create order collection of seller
+     * map items and create new orders
      */
-    const createCartAndOrderFunc = (
-      cartInput: CreateCartInput,
-      reduce?,
-      createCart?,
-      orderAdd?,
-    ) => {
-      try {
-        cartInput.items.forEach(async (item) => {
-          const SingleItem: any = await this.itemModel
-            .findById(item.itemId)
-            .populate('seller', '_id');
+    checkItems.map(async (item) => {
+      //find to get "quantity" from "createCartInput" array
+      const findQuantity: { itemId: string; quantity: number } =
+        createCartInput.items.find((i) => i.itemId == item._id.toString());
 
-          if (!SingleItem || SingleItem.quantity <= 0)
-            throw new GraphQLError('item not found');
-
-          reduce && reduce(SingleItem, item.quantity);
-          const cartId = createCart && (await createCart(this.cartModel));
-          orderAdd &&
-            orderAdd(
-              item.itemId,
-              SingleItem.seller._id,
-              cartId,
-              item.quantity,
-              this.orderModel,
-            );
-        });
-      } catch (err) {
-        throw new GraphQLError(err);
-      }
-    };
-
-    /**
-     * reduce quantity from item
-     * @param item item from find method
-     * @param quantity quantity of item
-     */
-    async function reduceQuantity(item: Item, quantity): Promise<void> {
-      item.quantity = item.quantity - quantity;
+      //reduce quantity and save
+      item.quantity = findQuantity.quantity;
       await item.save();
-    }
 
-    //If there is a cart in collection, push to cart. If doesn't create new one
-    async function addItemToCart(cartModel: Model<Cart>): Promise<string> {
-      try {
-        //create new collection
-        const addToCart = new cartModel({
-          userId: user.id,
-          cart: [createCartInput],
-        });
-        await addToCart.save();
-        return addToCart._id;
-      } catch (err) {
-        throw new GraphQLError(err);
-      }
-    }
-
-    /**
-     * add item to order
-     * @param itemId itemId
-     * @param sellerId sellerId
-     * @param quantity quantity of item
-     * @param orderModel collection model of order
-     */
-    async function addToOrderAndAllOrders(
-      itemId,
-      sellerId,
-      cartId,
-      quantity,
-      orderModel: Model<Order>,
-    ): Promise<void> {
-      const newOrder = new orderModel({
-        sellerId: sellerId,
+      //create new order and save
+      const newOrder = new this.orderModel({
+        sellerId: item.seller,
         buyerId: user.id,
-        itemId,
-        cartId,
-        quantity,
+        itemId: item._id,
+        cartId: cart._id,
+        quantity: findQuantity.quantity,
         location: createCartInput.location,
       });
 
       await newOrder.save();
-    }
-
-    //check item is available or not
-    createCartAndOrderFunc(createCartInput);
-
-    //check, reduce, add to cart and add order collection
-    createCartAndOrderFunc(
-      createCartInput,
-      reduceQuantity,
-      addItemToCart,
-      addToOrderAndAllOrders,
-    );
+    });
 
     return 'added to list';
   }
@@ -152,14 +94,6 @@ export class CartService {
     if (cart.userId.toString() === user.id) {
       return cart;
     }
-    throw new GraphQLError('u must be buyer of this cart');
-  }
-
-  update(id: number, updateCartInput: UpdateCartInput) {
-    return `This action updates a #${id} cart`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} cart`;
+    throw new ApolloError('u must be buyer of this cart');
   }
 }

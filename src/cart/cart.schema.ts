@@ -3,6 +3,7 @@ import { Document, Schema as MongooseSchema } from 'mongoose';
 import { RegionNTownship } from 'src/user/user.schema';
 import { User } from 'src/user/user.schema';
 import { Item } from 'src/items/items.schema';
+import { Order } from 'src/order/order.schema';
 
 @Schema({ _id: false })
 class SingleItem {

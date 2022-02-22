@@ -1,5 +1,4 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
-import { Schema } from 'mongoose';
 
 @InputType()
 export class RegionNTownship {
@@ -16,7 +15,7 @@ export class RegionNTownship {
 @InputType()
 class SingleItem {
   @Field(() => String)
-  itemId: Schema.Types.ObjectId;
+  itemId: string;
 
   @Field(() => Int)
   quantity: number;

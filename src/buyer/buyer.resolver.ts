@@ -23,7 +23,7 @@ export class BuyerResolver {
   async createCart(
     @Args('createCartInput') createCartInput: CreateCartInput,
     @Context() context,
-  ): Promise<string> {
+  ): Promise<string | void> {
     return await this.cartService.create(createCartInput, context.req.user);
   }
 

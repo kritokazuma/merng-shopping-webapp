@@ -26,7 +26,7 @@ import { ApolloDriver } from '@nestjs/apollo';
       sortSchema: true,
       resolvers: { Upload: GraphQLUpload },
     }),
-    MongooseModule.forRoot(process.env.MONGO_URL + 'users'),
+    MongooseModule.forRoot(process.env.MONGO_URL),
     UserModule,
     AuthModule,
     CommentsModule,

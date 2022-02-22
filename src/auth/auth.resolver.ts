@@ -15,7 +15,6 @@ import { ForgetPasswordInput } from './dto/forget-password.input';
 import { ConfirmOtp } from './dto/confirm-otp.input';
 import { ResetPasswordInput } from './dto/reset-password.input';
 import { JwtChangePasswordGuard } from './jwt-change-pass.guard';
-import { LoginAndRegisterDto } from './dto/login_n_register.dto';
 
 @Resolver(() => AuthUserReturn)
 export class AuthResolver {
