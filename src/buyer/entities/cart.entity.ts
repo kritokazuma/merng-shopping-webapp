@@ -39,8 +39,8 @@ export class CartEntities {
   @Field(() => String)
   userId: string;
 
-  @Field(() => [CartItems])
-  cart: Array<CartItems>;
+  @Field(() => CartItems)
+  cart: CartItems;
 
   @Field(() => String)
   createdAt: string;

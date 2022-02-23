@@ -11,16 +11,16 @@ export class CreateAuthInput {
   @Field(() => String)
   email?: string;
 
-  @Field(() => String)
   @MinLength(6, {
     message: 'username must not be less than 6 characters',
   })
+  @Field(() => String)
   username: string;
 
-  @Field(() => String)
   @MinLength(6, {
     message: 'password must not be less than 6 characters',
   })
+  @Field(() => String)
   password: string;
 
   @Field(() => String)

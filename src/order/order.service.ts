@@ -4,7 +4,6 @@ import { Model } from 'mongoose';
 import { JwtDecodeReturnDto } from 'src/auth/dto/auth-jwt-decode.dto';
 import { FilterItemInput } from 'src/items/dto/filter-item.input';
 import { UpdateStatusInput } from 'src/seller/dto/update-status.input';
-import { OrderEntities } from './entities/order.entities';
 import { Order } from './order.schema';
 
 @Injectable()
@@ -26,9 +25,4 @@ export class OrderService {
       .populate('sellerId', ['name', 'username', 'email', 'phone'])
       .populate('buyerId', ['name', 'username', 'email', 'phone']);
   }
-
-  async updateStatus(
-    updateStatusInput: UpdateStatusInput,
-    user: JwtDecodeReturnDto,
-  ) {}
 }

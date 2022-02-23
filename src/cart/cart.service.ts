@@ -5,7 +5,6 @@ import { JwtDecodeReturnDto } from 'src/auth/dto/auth-jwt-decode.dto';
 import { Item } from 'src/items/items.schema';
 import { Cart } from './cart.schema';
 import { CreateCartInput } from '../buyer/dto/create-cart.input';
-import { UpdateCartInput } from './dto/update-cart.input';
 import { User } from 'src/user/user.schema';
 import { Order } from 'src/order/order.schema';
 import { Model } from 'mongoose';
@@ -40,7 +39,7 @@ export class CartService {
     //---------create new cart and save
     const cart = new this.cartModel({
       userId: user.id,
-      cart: [createCartInput],
+      cart: createCartInput,
     });
     await cart.save();
     //----------end-------------------
@@ -83,17 +82,13 @@ export class CartService {
     });
   }
 
-  async findOne(cartId: string, user: JwtDecodeReturnDto) {
-    const cart = await this.cartModel.findById(cartId).populate({
+  async findOne(cartId: string) {
+    return await this.cartModel.findById(cartId).populate({
       path: 'cart',
       populate: {
         path: 'items',
         populate: 'itemId',
       },
     });
-    if (cart.userId.toString() === user.id) {
-      return cart;
-    }
-    throw new ApolloError('u must be buyer of this cart');
   }
 }

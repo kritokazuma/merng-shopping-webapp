@@ -3,7 +3,6 @@ import { Document, Schema as MongooseSchema } from 'mongoose';
 import { RegionNTownship } from 'src/user/user.schema';
 import { User } from 'src/user/user.schema';
 import { Item } from 'src/items/items.schema';
-import { Order } from 'src/order/order.schema';
 
 @Schema({ _id: false })
 class SingleItem {
@@ -17,7 +16,7 @@ class SingleItem {
   status?: string;
 }
 
-@Schema({ _id: false })
+@Schema()
 class CartItems {
   @Prop([SingleItem])
   items: SingleItem[];
@@ -37,8 +36,8 @@ export class Cart extends Document {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: User.name })
   userId: MongooseSchema.Types.ObjectId;
 
-  @Prop([CartItems])
-  cart: Array<CartItems>;
+  @Prop({ type: CartItems })
+  cart: CartItems;
 
   @Prop({ type: String, default: new Date().toLocaleString() })
   createdAt?: string;

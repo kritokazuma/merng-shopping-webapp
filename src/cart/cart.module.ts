@@ -14,6 +14,6 @@ import { OrderModule } from 'src/order/order.module';
     MongooseModule.forFeature([{ name: Cart.name, schema: CartSchema }]),
   ],
   providers: [CartService],
-  exports: [CartService],
+  exports: [MongooseModule, CartService],
 })
 export class CartModule {}

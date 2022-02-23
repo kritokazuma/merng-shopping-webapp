@@ -11,6 +11,7 @@ import { FileUpload, GraphQLUpload } from 'graphql-upload';
 import { ItemsService } from 'src/items/items.service';
 import { UpdateItemInput } from 'src/seller/dto/update-item.input';
 import { Item } from 'src/items/items.schema';
+import { UpdateStatusInput } from './dto/update-status.input';
 
 @Resolver()
 export class SellerResolver {
@@ -75,8 +76,13 @@ export class SellerResolver {
     );
   }
 
-  @Mutation(() => ItemsEntities)
+  @Mutation(() => String)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('seller', 'admin')
-  async updateItemStatusBySeller() {}
+  async updateOrderStatus(
+    @Args('updateStatusInput') updateStatusInput: UpdateStatusInput,
+    @Context() context,
+  ) {
+    return this.sellerService.updateStatus(updateStatusInput, context.req.user);
+  }
 }

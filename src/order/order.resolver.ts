@@ -8,12 +8,12 @@ export class OrderResolver {
   constructor(private readonly orderService: OrderService) {}
 
   @Query(() => [OrderEntities])
-  async getOrders(@Args('filterItemInput') filterItemInput: FilterItemInput) {
-    return await this.orderService.getOrders(filterItemInput);
+  getOrders(@Args('filterItemInput') filterItemInput: FilterItemInput) {
+    return this.orderService.getOrders(filterItemInput);
   }
 
   @Query(() => OrderEntities)
-  async getOrder(@Args('id') id: string) {
-    return await this.orderService.getOrder(id);
+  getOrder(@Args('id') id: string) {
+    return this.orderService.getOrder(id);
   }
 }

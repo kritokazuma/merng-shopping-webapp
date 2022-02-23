@@ -16,7 +16,7 @@ type AuthUserReturn {
 
 type CartEntities {
   _id: String!
-  cart: [CartItems!]!
+  cart: CartItems!
   createdAt: String!
   userId: String!
 }
@@ -105,7 +105,7 @@ type Mutation {
   register(createAuthInput: CreateAuthInput!): AuthUserReturn!
   resetPassword(resetPasswordInput: ResetPasswordInput!): String!
   updateItem(file: [Upload!], updateItemInput: UpdateItemInput!): ItemsEntities!
-  updateItemStatusBySeller: ItemsEntities!
+  updateOrderStatus(updateStatusInput: UpdateStatusInput!): String!
 }
 
 type OrderEntities {
@@ -186,6 +186,11 @@ input UpdateItemInput {
   price: Int
   quantity: Int
   removedImage: [Int!]
+}
+
+input UpdateStatusInput {
+  id: String!
+  status: String!
 }
 
 """The `Upload` scalar type represents a file upload."""
