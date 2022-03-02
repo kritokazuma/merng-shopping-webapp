@@ -2,19 +2,15 @@ import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CartService } from 'src/cart/cart.service';
-import { CreateCartInput } from 'src/buyer/dto/create-cart.input';
+import { CreateCartInput } from 'src/cart/dto/create-cart.input';
 import { Roles } from 'src/roles.decorator';
 import { RolesGuard } from 'src/roles.guard';
-import { CartEntities } from './entities/cart.entity';
-import { BuyerService } from './buyer.service';
 import { Cart } from 'src/cart/cart.schema';
+import { CartEntities } from 'src/cart/entities/cart.entity';
 
 @Resolver()
-export class BuyerResolver {
-  constructor(
-    private readonly cartService: CartService,
-    private readonly buyerService: BuyerService,
-  ) {}
+export class CartResolver {
+  constructor(private readonly cartService: CartService) {}
 
   /**
    * Add Item to Buy list (cart)
@@ -48,6 +44,6 @@ export class BuyerResolver {
     @Args('cartId') cartId: string,
     @Context() context,
   ): Promise<Cart> {
-    return await this.buyerService.getCart(cartId, context.req.user);
+    return await this.cartService.getCart(cartId, context.req.user);
   }
 }

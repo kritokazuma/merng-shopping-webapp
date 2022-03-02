@@ -53,6 +53,12 @@ input CreateCartInput {
   location: RegionNTownship!
 }
 
+input CreateCommentInput {
+  comment: String!
+  commentId: String
+  itemId: String!
+}
+
 input CreateItemInput {
   catagory: [String!]!
   description: String!
@@ -98,14 +104,17 @@ type Mutation {
   addAddress(addressInput: AddressInput!): String!
   confirmResetPasswordOtp(confirmOtp: ConfirmOtp!): forgetPasswordConfirmOtpReturn!
   createCart(createCartInput: CreateCartInput!): String!
+  createComment(createCommentInput: CreateCommentInput!): String!
   createItem(createItemInput: CreateItemInput!, file: [Upload!]!): ItemsEntities!
+  deleteComment(commentId: String!): String!
   deleteItem(id: String!): String!
   forgetPassword(forgetPasswordInput: ForgetPasswordInput!): String!
   login(loginAuthInput: LoginAuthInput!): AuthUserReturn!
   register(createAuthInput: CreateAuthInput!): AuthUserReturn!
   resetPassword(resetPasswordInput: ResetPasswordInput!): String!
+  updateComment(updateCommentInput: UpdateCommentInput!): String!
   updateItem(file: [Upload!], updateItemInput: UpdateItemInput!): ItemsEntities!
-  updateOrderStatus(updateStatusInput: UpdateStatusInput!): String!
+  updateOrderStatus(updateStatusInput: UpdateOrderStatusInput!): String!
 }
 
 type OrderEntities {
@@ -120,6 +129,12 @@ type OrderEntities {
   status: String!
 }
 
+input OrderFilterInput {
+  limit: Int!
+  skip: Int!
+  status: String!
+}
+
 type Query {
   getCart(cartId: String!): CartEntities!
   getCarts: [CartEntities!]!
@@ -128,8 +143,9 @@ type Query {
   getItemRandomly: [ItemsEntities!]!
   getItems(filterItemInput: FilterItemInput!): [ItemsEntities!]!
   getItemsByCatagory(catagoryInput: FilterItemInput!): [ItemsEntities!]!
-  getOrder(id: String!): OrderEntities!
-  getOrders(filterItemInput: FilterItemInput!): [OrderEntities!]!
+  getOrder(id: String!): [OrderEntities!]!
+  getOrders(orderFilterInput: OrderFilterInput!): [OrderEntities!]!
+  getSellerOrders(orderFilterInput: OrderFilterInput!): [OrderEntities!]!
   getUserInfo: UserEntities!
 }
 
@@ -179,6 +195,11 @@ input SingleItem {
   quantity: Int!
 }
 
+input UpdateCommentInput {
+  comment: String!
+  commentId: String!
+}
+
 input UpdateItemInput {
   description: String
   id: String!
@@ -188,8 +209,8 @@ input UpdateItemInput {
   removedImage: [Int!]
 }
 
-input UpdateStatusInput {
-  id: String!
+input UpdateOrderStatusInput {
+  orderId: String!
   status: String!
 }
 

@@ -2,15 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { JwtDecodeReturnDto } from 'src/auth/dto/auth-jwt-decode.dto';
-import { CreateItemInput } from '../seller/dto/create-item.input';
+import { CreateItemInput } from './dto/create-item.input';
 import { Item } from './items.schema';
 import { UserService } from 'src/user/user.service';
-import { ForbiddenError } from 'apollo-server-express';
+import { AuthenticationError, ForbiddenError } from 'apollo-server-express';
 import { GraphQLError } from 'graphql';
 import { FilterItemInput } from './dto/filter-item.input';
 import { FileUpload } from 'graphql-upload';
 import { createWriteStream } from 'fs';
-import { UpdateItemInput } from '../seller/dto/update-item.input';
+import { UpdateItemInput } from './dto/update-item.input';
 import { readFile, unlink } from 'fs';
 import { SearchInput } from './dto/search.input';
 
@@ -215,7 +215,7 @@ export class ItemsService {
   /**
    * Search item by text and range
    * @param searchInput input and price range
-   * @returns
+   * @returns Item
    */
   async getItemBySearch(searchInput: SearchInput): Promise<Item[]> {
     if (searchInput.priceRange) {

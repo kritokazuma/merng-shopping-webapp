@@ -6,13 +6,12 @@ import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ItemsModule } from './items/items.module';
-import { CommentsModule } from './comments/comments.module';
 import { GraphQLUpload } from 'graphql-upload';
 import { CartModule } from './cart/cart.module';
-import { SellerModule } from './seller/seller.module';
-import { BuyerModule } from './buyer/buyer.module';
 import { OrderModule } from './order/order.module';
 import { ApolloDriver } from '@nestjs/apollo';
+import { CommentModule } from './comment/comment.module';
+import { ReplyModule } from './reply/reply.module';
 
 @Module({
   imports: [
@@ -29,12 +28,11 @@ import { ApolloDriver } from '@nestjs/apollo';
     MongooseModule.forRoot(process.env.MONGO_URL),
     UserModule,
     AuthModule,
-    CommentsModule,
     ItemsModule,
     CartModule,
-    SellerModule,
-    BuyerModule,
     OrderModule,
+    CommentModule,
+    ReplyModule,
   ],
   controllers: [],
   providers: [],

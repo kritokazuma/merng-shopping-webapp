@@ -2,10 +2,10 @@ import { Field, InputType } from '@nestjs/graphql';
 import { IsNotEmpty } from 'class-validator';
 
 @InputType()
-export class UpdateStatusInput {
+export class UpdateOrderStatusInput {
   @IsNotEmpty()
   @Field(() => String)
-  id: string;
+  orderId: string;
 
   @IsNotEmpty()
   @Field(() => String)

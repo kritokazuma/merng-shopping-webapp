@@ -4,7 +4,7 @@ import { ApolloError, UserInputError } from 'apollo-server-express';
 import { JwtDecodeReturnDto } from 'src/auth/dto/auth-jwt-decode.dto';
 import { Item } from 'src/items/items.schema';
 import { Cart } from './cart.schema';
-import { CreateCartInput } from '../buyer/dto/create-cart.input';
+import { CreateCartInput } from './dto/create-cart.input';
 import { User } from 'src/user/user.schema';
 import { Order } from 'src/order/order.schema';
 import { Model } from 'mongoose';
@@ -90,5 +90,14 @@ export class CartService {
         populate: 'itemId',
       },
     });
+  }
+
+  async getCart(cartId: string, user: JwtDecodeReturnDto) {
+    const cart = await this.findOne(cartId);
+    if (!cart) throw new UserInputError('cart not found');
+    if (cart.userId.toString() === user.id) {
+      return cart;
+    }
+    throw new ApolloError('u must be buyer of this cart');
   }
 }

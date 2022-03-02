@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 import { User } from 'src/user/user.schema';
 
+@Schema()
 class UserRatings {
   @Prop()
   username: string;
@@ -11,23 +12,6 @@ class UserRatings {
 
   @Prop()
   rating: number;
-}
-
-//Sender and Comment
-class Sender {
-  @Prop()
-  sendBy: string;
-
-  @Prop()
-  comment: string;
-}
-
-class Comment {
-  @Prop()
-  question: Sender;
-
-  @Prop({ default: null })
-  answer: Sender;
 }
 
 @Schema()
@@ -58,9 +42,6 @@ export class Item extends Document {
 
   @Prop()
   ratings: UserRatings[];
-
-  @Prop()
-  comments: Comment[];
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: User.name })
   seller: MongooseSchema.Types.ObjectId;
