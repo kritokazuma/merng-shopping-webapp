@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
+import { Comment } from 'src/comment/comment.schema';
 import { User } from 'src/user/user.schema';
 
 @Schema()
@@ -51,6 +52,9 @@ export class Item extends Document {
 
   @Prop({ type: Date })
   updatedAt?: string;
+
+  //to add comments
+  comments?: Comment[];
 }
 
 export const ItemSchema = SchemaFactory.createForClass(Item);

@@ -13,6 +13,7 @@ specifiers:
   '@nestjs/passport': ^8.1.0
   '@nestjs/platform-express': ^8.2.6
   '@nestjs/schematics': ^8.0.6
+  '@nestjs/serve-static': ^2.2.2
   '@nestjs/testing': ^8.2.6
   '@types/bcrypt': ^5.0.0
   '@types/cache-manager': ^3.4.2
@@ -78,6 +79,7 @@ dependencies:
   '@nestjs/mongoose': 9.0.2_093afb0d011de9b9a657428a948c1776
   '@nestjs/passport': 8.1.0_469354efd308cbdee43194b5fd6a2c15
   '@nestjs/platform-express': 8.2.6_732a54a2558f64827b8cc4f9baac4f1f
+  '@nestjs/serve-static': 2.2.2_732a54a2558f64827b8cc4f9baac4f1f
   '@types/cryptojs': 3.1.30
   apollo-server-express: 3.6.3_graphql@15.8.0
   bcrypt: 5.0.1
@@ -1268,6 +1270,17 @@ packages:
     transitivePeerDependencies:
       - chokidar
     dev: true
+
+  /@nestjs/serve-static/2.2.2_732a54a2558f64827b8cc4f9baac4f1f:
+    resolution: {integrity: sha512-3Mr+Q/npS3N7iGoF3Wd6Lj9QcjMGxbNrSqupi5cviM0IKrZ1BHl5qekW95rWYNATAVqoTmjGROAq+nKKpuUagQ==}
+    peerDependencies:
+      '@nestjs/common': ^6.0.0 || ^7.0.0 || ^8.0.0
+      '@nestjs/core': ^6.0.0 || ^7.0.0 || ^8.0.0
+    dependencies:
+      '@nestjs/common': 8.2.6_6686f1d73a399753b561a58a608807ad
+      '@nestjs/core': 8.2.6_5684bf528b4443973bd4ffbc8f3308ef
+      path-to-regexp: 0.1.7
+    dev: false
 
   /@nestjs/testing/8.2.6_1699e640608e163275ea9b880b9a13d0:
     resolution: {integrity: sha512-Cg8tM7yxlLDBO+CTNjk6X/UkxGRsprFc8gDHGEGesiE9wLErxNnslFugfUnYWJaSzmLZSqcFFig7mThc8VSxrw==}

@@ -2,17 +2,20 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { JwtDecodeReturnDto } from 'src/auth/dto/auth-jwt-decode.dto';
-import { Item } from 'src/items/items.schema';
 import { CreateCommentInput } from './dto/create-comment.input';
 import { Comment } from './comment.schema';
 import { ApolloError, UserInputError } from 'apollo-server-express';
 import { UpdateCommentInput } from './dto/update-comment.input';
+import { ItemsService } from 'src/items/items.service';
+import { ReplyCommentInput } from './dto/reply-comment.input';
+import { Item } from 'src/items/items.schema';
 
 @Injectable()
 export class CommentService {
   constructor(
-    @InjectModel(Item.name) private readonly itemModel: Model<Item>,
+    private readonly itemsService: ItemsService,
     @InjectModel(Comment.name) private readonly commentModel: Model<Comment>,
+    @InjectModel(Item.name) private readonly itemModel: Model<Item>,
   ) {}
 
   /**
@@ -28,7 +31,6 @@ export class CommentService {
     try {
       const item = await this.itemModel.findById(createCommentInput.itemId);
       if (!item) throw new UserInputError('item Not Found');
-
       //Create new comment collection
       const comment = new this.commentModel({
         userId: user.id,
@@ -39,6 +41,7 @@ export class CommentService {
       await comment.save();
       return 'success';
     } catch (err) {
+      console.log({ err });
       throw new ApolloError(err);
     }
   }
@@ -93,5 +96,25 @@ export class CommentService {
     } catch (err) {
       throw new ApolloError(err);
     }
+  }
+
+  async replyComment(
+    replyCommentInput: ReplyCommentInput,
+    user: JwtDecodeReturnDto,
+  ) {
+    const getComment = await this.commentModel.findById(
+      replyCommentInput.commentId,
+    );
+    if (!getComment) throw new UserInputError('comment not found');
+    const reply = new this.commentModel({
+      userId: user.id,
+      comment: replyCommentInput.comment,
+    });
+
+    getComment.reply.push(reply._id);
+
+    await reply.save();
+    getComment.save();
+    return 'success';
   }
 }

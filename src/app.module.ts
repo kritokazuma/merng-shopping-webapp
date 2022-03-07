@@ -11,7 +11,6 @@ import { CartModule } from './cart/cart.module';
 import { OrderModule } from './order/order.module';
 import { ApolloDriver } from '@nestjs/apollo';
 import { CommentModule } from './comment/comment.module';
-import { ReplyModule } from './reply/reply.module';
 
 @Module({
   imports: [
@@ -32,7 +31,6 @@ import { ReplyModule } from './reply/reply.module';
     CartModule,
     OrderModule,
     CommentModule,
-    ReplyModule,
   ],
   controllers: [],
   providers: [],

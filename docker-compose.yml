@@ -2,6 +2,8 @@ version: '3'
 services:
   nest-app:
     build: .
+    volumes:
+      - ./:/app
     ports:
       - "4000:4000"
     environment:
@@ -10,6 +12,7 @@ services:
       - mongo
     depends_on:
       - mongo
+    command: pnpm start:dev
   mongo:
     image: mongo
     environment:

@@ -22,30 +22,28 @@ export class ItemsResolver {
 
   /*------------Query Items----------------*/
   @Query(() => [ItemsEntities])
-  async getItems(@Args('filterItemInput') filterItemInput: FilterItemInput) {
-    return await this.itemsService.getItems(filterItemInput);
+  getItems(@Args('filterItemInput') filterItemInput: FilterItemInput) {
+    return this.itemsService.getItems(filterItemInput);
   }
 
   @Query(() => [ItemsEntities])
-  async getItemsByCatagory(
-    @Args('catagoryInput') catagoryInput: FilterItemInput,
-  ) {
-    return await this.itemsService.getItemsByCatagory(catagoryInput);
+  getItemsByCatagory(@Args('catagoryInput') catagoryInput: FilterItemInput) {
+    return this.itemsService.getItemsByCatagory(catagoryInput);
   }
 
   @Query(() => [ItemsEntities])
-  async getItemRandomly() {
-    return await this.itemsService.getItemRandomly();
+  getItemRandomly() {
+    return this.itemsService.getItemRandomly();
   }
 
   @Query(() => ItemsEntities)
-  async getItemById(@Args('id') id: string) {
-    return await this.itemsService.getItemById(id);
+  getItemById(@Args('id') id: string) {
+    return this.itemsService.getItemById(id);
   }
 
   @Query(() => [ItemsEntities])
-  async getItemBySearch(@Args('searchInput') searchInput: SearchInput) {
-    return await this.itemsService.getItemBySearch(searchInput);
+  getItemBySearch(@Args('searchInput') searchInput: SearchInput) {
+    return this.itemsService.getItemBySearch(searchInput);
   }
   /*------------End of Query Items----------------*/
 
@@ -65,7 +63,7 @@ export class ItemsResolver {
     @Args({ name: 'file', type: () => [GraphQLUpload] })
     file: Promise<FileUpload>[],
     @Context() context,
-  ): Promise<Item> {
+  ) {
     return this.itemsService.create(createItemInput, context.req.user, file);
   }
 
@@ -78,8 +76,8 @@ export class ItemsResolver {
   @Mutation(() => String)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('seller', 'admin')
-  async deleteItem(@Args('id') id: string, @Context() context) {
-    return await this.itemsService.deleteItem(id, context.req.user);
+  deleteItem(@Args('id') id: string, @Context() context) {
+    return this.itemsService.deleteItem(id, context.req.user);
   }
 
   /**
@@ -92,13 +90,13 @@ export class ItemsResolver {
   @Mutation(() => ItemsEntities)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('seller', 'admin')
-  async updateItem(
+  updateItem(
     @Args('updateItemInput') updateItemInput: UpdateItemInput,
     @Args({ name: 'file', type: () => [GraphQLUpload], nullable: true })
     files: Promise<FileUpload>[],
     @Context() context,
   ): Promise<Item> {
-    return await this.itemsService.updateItem(
+    return this.itemsService.updateItem(
       updateItemInput,
       files,
       context.req.user,

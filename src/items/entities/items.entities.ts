@@ -1,4 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Schema } from 'mongoose';
+import { CommentEntities } from 'src/comment/entities/comment.entities';
 
 @ObjectType()
 class UserRatings {
@@ -10,25 +12,6 @@ class UserRatings {
 
   @Field(() => Int, { nullable: true })
   rating?: number;
-}
-
-//Sender and Comment
-@ObjectType()
-class Sender {
-  @Field(() => String)
-  sendBy: string;
-
-  @Field(() => String)
-  comment: string;
-}
-
-@ObjectType()
-class Comment {
-  @Field(() => Sender, { nullable: true })
-  question?: Sender;
-
-  @Field(() => Sender, { nullable: true })
-  answer?: Sender;
 }
 
 @ObjectType()
@@ -46,7 +29,7 @@ export class RegionAndTownship {
 @ObjectType()
 class SellerDetails {
   @Field(() => String)
-  _id: string;
+  _id: Schema.Types.ObjectId;
 
   @Field(() => String)
   name: string;
@@ -64,7 +47,7 @@ class SellerDetails {
 @ObjectType()
 export class ItemsEntities {
   @Field(() => String)
-  _id: any;
+  _id: Schema.Types.ObjectId;
 
   @Field(() => String)
   label: string;
@@ -93,8 +76,8 @@ export class ItemsEntities {
   @Field(() => [UserRatings], { nullable: true })
   ratings?: UserRatings[];
 
-  @Field(() => [Comment], { nullable: true })
-  comments: Comment[];
+  @Field(() => [CommentEntities], { nullable: true })
+  comments?: CommentEntities[];
 
   @Field(() => SellerDetails)
   seller: SellerDetails;

@@ -28,9 +28,12 @@ type CartItems {
   status: String!
 }
 
-type Comment {
-  answer: Sender
-  question: Sender
+type CommentEntities {
+  _id: String!
+  comment: String!
+  itemId: String!
+  reply: [CommentEntities!]
+  userId: userDetails!
 }
 
 input ConfirmOtp {
@@ -81,7 +84,7 @@ input ForgetPasswordInput {
 type ItemsEntities {
   _id: String!
   catagory: [String!]!
-  comments: [Comment!]
+  comments: [CommentEntities!]
   createdAt: String!
   description: String!
   images: [String!]!
@@ -111,6 +114,7 @@ type Mutation {
   forgetPassword(forgetPasswordInput: ForgetPasswordInput!): String!
   login(loginAuthInput: LoginAuthInput!): AuthUserReturn!
   register(createAuthInput: CreateAuthInput!): AuthUserReturn!
+  replyComment(replyCommentInput: ReplyCommentInput!): String!
   resetPassword(resetPasswordInput: ResetPasswordInput!): String!
   updateComment(updateCommentInput: UpdateCommentInput!): String!
   updateItem(file: [Upload!], updateItemInput: UpdateItemInput!): ItemsEntities!
@@ -161,6 +165,11 @@ input RegionNTownship {
   township: String!
 }
 
+input ReplyCommentInput {
+  comment: String!
+  commentId: String!
+}
+
 input ResetPasswordInput {
   confirmPassword: String!
   password: String!
@@ -177,11 +186,6 @@ type SellerDetails {
   location: RegionAndTownship!
   name: String!
   phone: String!
-}
-
-type Sender {
-  comment: String!
-  sendBy: String!
 }
 
 type SingleCartItem {
@@ -245,4 +249,10 @@ type UserRatings {
 
 type forgetPasswordConfirmOtpReturn {
   token: String!
+}
+
+type userDetails {
+  _id: String!
+  avatar: String!
+  name: String!
 }
